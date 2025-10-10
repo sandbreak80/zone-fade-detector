@@ -114,6 +114,12 @@ class Zone:
         """Record a touch of this zone."""
         self.touches += 1
         self.last_touch = timestamp
+    
+    @property
+    def range_size(self) -> float:
+        """Calculate the size of the zone (for entry/stop calculations)."""
+        # For now, use a default range size based on the level
+        return self.level * 0.01  # 1% of the level as range size
 
 
 @dataclass

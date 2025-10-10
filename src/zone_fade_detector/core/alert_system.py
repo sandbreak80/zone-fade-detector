@@ -28,7 +28,7 @@ class AlertChannelConfig:
     webhook_enabled: bool = False
     
     # File configuration
-    file_path: str = "logs/alerts.log"
+    file_path: str = "/app/logs/alerts.log"
     file_max_size: int = 10485760  # 10MB
     file_backup_count: int = 5
     
@@ -210,12 +210,27 @@ class WebhookAlertChannel(AlertChannel):
             return False
         
         try:
-            # Prepare payload
+            # Prepare Discord webhook payload
+            setup = alert.setup
             payload = {
-                'alert_id': alert.alert_id,
-                'timestamp': alert.created_at.isoformat(),
-                'setup': alert.to_dict(),
-                'source': 'zone_fade_detector'
+                'content': f"🚨 **ZONE FADE ALERT** - {alert.alert_id}",
+                'embeds': [{
+                    'title': f"Zone Fade Setup - {setup.symbol}",
+                    'description': f"**Direction:** {setup.direction.value.upper()}\n**Zone Level:** ${setup.zone.level:.2f}\n**QRS Score:** {setup.qrs_score}/10",
+                    'color': 0x00ff00 if setup.direction.value == 'long' else 0xff0000,
+                    'fields': [
+                        {'name': 'Symbol', 'value': setup.symbol, 'inline': True},
+                        {'name': 'Direction', 'value': setup.direction.value.upper(), 'inline': True},
+                        {'name': 'Zone Level', 'value': f"${setup.zone.level:.2f}", 'inline': True},
+                        {'name': 'QRS Score', 'value': f"{setup.qrs_score}/10", 'inline': True},
+                        {'name': 'Entry Price', 'value': f"${setup.entry_price:.2f}", 'inline': True},
+                        {'name': 'Stop Loss', 'value': f"${setup.stop_loss:.2f}", 'inline': True},
+                        {'name': 'Target 1', 'value': f"${setup.target_1:.2f}", 'inline': True},
+                        {'name': 'Target 2', 'value': f"${setup.target_2:.2f}", 'inline': True}
+                    ],
+                    'timestamp': alert.created_at.isoformat(),
+                    'footer': {'text': 'Zone Fade Detector'}
+                }]
             }
             
             # Add signature if secret is provided
@@ -236,7 +251,7 @@ class WebhookAlertChannel(AlertChannel):
                     json=payload,
                     timeout=aiohttp.ClientTimeout(total=self.config.webhook_timeout)
                 ) as response:
-                    if response.status == 200:
+                    if response.status in [200, 204]:
                         return True
                     else:
                         self.logger.error(f"Webhook returned status {response.status}")
