@@ -56,6 +56,11 @@ from zone_fade_detector.utils.logging import setup_logging
     is_flag=True,
     help="Enable verbose output",
 )
+@click.option(
+    "--test-alerts",
+    is_flag=True,
+    help="Test alert channels and exit",
+)
 def main(
     config: Path,
     log_level: Optional[str],
@@ -63,6 +68,7 @@ def main(
     poll_interval: Optional[int],
     dry_run: bool,
     verbose: bool,
+    test_alerts: bool,
 ) -> None:
     """
     Zone Fade Detector - Identify high-probability reversal setups.
@@ -100,8 +106,14 @@ def main(
         console.print(f"Dry Run: {config_data['development'].get('dry_run', False)}")
         console.print()
         
-        # Initialize and run detector
+        # Initialize detector
         detector = ZoneFadeDetector(config_data)
+        
+        # Test alerts if requested
+        if test_alerts:
+            console.print("[yellow]Testing alert channels...[/yellow]")
+            asyncio.run(test_alert_channels(detector))
+            return
         
         # Run the detector
         asyncio.run(detector.run())
@@ -114,6 +126,33 @@ def main(
         if verbose:
             console.print_exception()
         sys.exit(1)
+
+
+async def test_alert_channels(detector: ZoneFadeDetector) -> None:
+    """Test alert channels."""
+    from zone_fade_detector.core.alert_system import AlertChannelConfig
+    
+    # Create test alert configuration
+    alert_config = AlertChannelConfig(
+        console_enabled=True,
+        file_enabled=True,
+        email_enabled=False,  # Disable email for testing
+        webhook_enabled=False  # Disable webhook for testing
+    )
+    
+    from zone_fade_detector.core.alert_system import AlertSystem
+    alert_system = AlertSystem(alert_config)
+    
+    # Test channels
+    results = alert_system.test_channels()
+    
+    console = Console()
+    console.print("\n[bold]Alert Channel Test Results:[/bold]")
+    for channel, success in results.items():
+        status = "✅ PASS" if success else "❌ FAIL"
+        console.print(f"  {channel}: {status}")
+    
+    console.print(f"\nOverall: {'✅ All channels working' if all(results.values()) else '❌ Some channels failed'}")
 
 
 if __name__ == "__main__":
