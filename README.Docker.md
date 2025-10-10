@@ -31,6 +31,7 @@ nano .env
 - `ALPACA_API_KEY` - Your Alpaca API key
 - `ALPACA_SECRET_KEY` - Your Alpaca secret key  
 - `POLYGON_API_KEY` - Your Polygon API key
+- `DISCORD_WEBHOOK_URL` - Your Discord webhook URL for alerts
 
 ### 3. Configure Application
 
@@ -119,6 +120,9 @@ ALPACA_API_KEY=your_key_here
 ALPACA_SECRET_KEY=your_secret_here
 POLYGON_API_KEY=your_key_here
 
+# Discord Webhook (for alerts)
+DISCORD_WEBHOOK_URL=https://discordapp.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+
 # System Settings
 LOG_LEVEL=INFO
 POLL_INTERVAL=30
@@ -148,10 +152,40 @@ polling:
 
 # Alert Configuration
 alerts:
-  channels: [console, file]
+  channels: [console, file, webhook]
   min_qrs_score: 7
   deduplication_minutes: 5
+  
+  webhook:
+    enabled: true
+    url: ${DISCORD_WEBHOOK_URL}
+    timeout: 5
 ```
+
+## 📱 Discord Webhook Setup
+
+The system supports Discord webhooks for real-time alerts. See the [Discord Setup Guide](docs/DISCORD_SETUP.md) for detailed instructions.
+
+### Quick Setup
+
+1. **Create a Discord webhook** in your server
+2. **Add the webhook URL** to your `.env` file:
+   ```bash
+   DISCORD_WEBHOOK_URL=https://discordapp.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+   ```
+3. **Test the webhook**:
+   ```bash
+   docker-compose run --rm zone-fade-detector --test-alerts
+   ```
+
+### Alert Format
+
+Discord alerts include:
+- Symbol and direction (Long/Short)
+- Zone level and type
+- QRS score (quality rating)
+- Rejection candle details
+- Target levels and confirmation status
 
 ## 🛠️ Development
 

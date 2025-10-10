@@ -1,6 +1,6 @@
 # Zone Fade Detector
 
-A Python-based trading system that identifies high-probability Zone Fade reversal setups using 15-minute delayed market data from Alpaca and Polygon APIs.
+A Docker-based trading system that identifies high-probability Zone Fade reversal setups using 15-minute delayed market data from Alpaca and Polygon APIs.
 
 ## 🎯 Overview
 
@@ -22,16 +22,18 @@ zone-fade-detector/
 ├── docs/                            # Documentation
 ├── config/                          # Configuration files
 ├── scripts/                         # Utility scripts
-├── requirements.txt                 # Production dependencies
-├── requirements-dev.txt             # Development dependencies
-└── .cursorrules                     # Cursor IDE rules
+├── docker-compose.yml               # Docker Compose configuration
+├── Dockerfile                       # Docker image definition
+└── requirements.txt                 # Production dependencies
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Docker Engine 20.10+
+- Docker Compose 2.0+
+- At least 2GB RAM and 1 CPU core available
 - Alpaca API credentials
 - Polygon API credentials
 
@@ -39,76 +41,46 @@ zone-fade-detector/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/sandbreak80/zone-fade-detector.git
    cd zone-fade-detector
    ```
 
-2. **Create virtual environment**
+2. **Configure environment variables**
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up environment variables**
-   ```bash
-   cp .env.example .env
+   cp .env.docker .env
    # Edit .env with your API credentials
    ```
 
-5. **Configure the system**
+3. **Configure the application**
    ```bash
-   cp config/config.example.yaml config/config.yaml
+   cp config/config.docker.yaml config/config.yaml
    # Edit config.yaml with your preferences
    ```
-
-### Quick Setup
-
-```bash
-# Run the setup script
-./scripts/setup.sh
-
-# Or manually:
-make setup
-```
-
-### Quick Run Sequence
-
-```bash
-# 1. Smoke test
-make test && make typecheck && make format
-
-# 2. Replay (balanced/trend days)
-make replay START=2025-01-06 END=2025-01-10 SYMBOLS=SPY,QQQ,IWM PROVIDER=alpaca
-
-# 3. Inspect signals
-make signals-today  # or view signals/*.jsonl files
-
-# 4. Live (paper) run during RTH
-make live
-```
 
 ### Running the System
 
 ```bash
-# Standard mode (continuous monitoring)
-python -m zone_fade_detector.main
+# Build and run in standard mode (continuous monitoring)
+docker-compose up zone-fade-detector
+
+# Run in background
+docker-compose up -d zone-fade-detector
 
 # Live mode (RTH only)
-python -m zone_fade_detector.main --live
+docker-compose run --rm zone-fade-detector --mode live --verbose
 
 # Replay mode (historical data)
-python -m zone_fade_detector.main --replay --start-date 2025-01-06 --end-date 2025-01-10 --symbols SPY,QQQ,IWM --provider alpaca
+docker-compose run --rm zone-fade-detector \
+  --mode replay \
+  --start-date 2024-01-01 \
+  --end-date 2024-01-31 \
+  --provider alpaca
 
 # Test alert channels
-python -m zone_fade_detector.main --test-alerts
+docker-compose run --rm zone-fade-detector --test-alerts
 
-# Run with custom configuration
-python -m zone_fade_detector.main --config config/production.yaml
+# View logs
+docker-compose logs -f zone-fade-detector
 ```
 
 ## 📊 Zone Fade Strategy
@@ -155,6 +127,9 @@ ALPACA_API_KEY=your_alpaca_key
 ALPACA_SECRET_KEY=your_alpaca_secret
 POLYGON_API_KEY=your_polygon_key
 
+# Discord Webhook (for alerts)
+DISCORD_WEBHOOK_URL=https://discordapp.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
+
 # System Configuration
 LOG_LEVEL=INFO
 POLL_INTERVAL=30
@@ -188,9 +163,14 @@ zones:
   value_area: true
 
 alerts:
-  channels: ['console', 'file']
+  channels: ['console', 'file', 'webhook']
   min_qrs_score: 7
   deduplication_minutes: 5
+  
+  webhook:
+    enabled: true
+    url: ${DISCORD_WEBHOOK_URL}
+    timeout: 5
 ```
 
 ## 📈 Technical Indicators
@@ -234,18 +214,18 @@ alerts:
 ### Running Tests
 
 ```bash
-# Run all tests
-pytest
+# Run all tests in Docker
+docker-compose run --rm zone-fade-detector-test
 
 # Run with coverage
-pytest --cov=zone_fade_detector
+docker-compose run --rm zone-fade-detector-test pytest --cov=zone_fade_detector
 
 # Run specific test categories
-pytest tests/unit/
-pytest tests/integration/
+docker-compose run --rm zone-fade-detector-test pytest tests/unit/
+docker-compose run --rm zone-fade-detector-test pytest tests/integration/
 
 # Run with verbose output
-pytest -v
+docker-compose run --rm zone-fade-detector-test pytest -v
 ```
 
 ### Test Structure
@@ -255,40 +235,11 @@ pytest -v
 - **Mock Data**: Use factory-boy for generating test data
 - **Coverage**: Aim for >90% code coverage
 
-## 📝 Development
-
-### Code Quality
-
-```bash
-# Format code
-black src/ tests/
-
-# Sort imports
-isort src/ tests/
-
-# Lint code
-flake8 src/ tests/
-
-# Type checking
-mypy src/
-```
-
-### Pre-commit Hooks
-
-```bash
-# Install pre-commit
-pip install pre-commit
-
-# Install hooks
-pre-commit install
-
-# Run on all files
-pre-commit run --all-files
-```
-
 ## 📚 Documentation
 
 - **PRD**: [Product Requirements Document](docs/PRD.md)
+- **Docker Setup**: [Docker Deployment Guide](README.Docker.md)
+- **Discord Setup**: [Discord Webhook Setup Guide](docs/DISCORD_SETUP.md)
 - **API Reference**: Generated from docstrings
 - **Strategy Guide**: Detailed trading strategy documentation
 - **Configuration Guide**: Complete configuration options
@@ -299,8 +250,7 @@ The system supports multiple alert channels:
 
 - **Console**: Real-time console output
 - **File**: Log file output
-- **Email**: SMTP email alerts (future)
-- **Webhook**: HTTP POST notifications (future)
+- **Discord Webhook**: Real-time Discord notifications
 
 ### Alert Format
 
