@@ -125,7 +125,7 @@ class QRSScorer:
         Returns:
             Zone quality score (0-2)
         """
-        score = 1  # Give base points for any zone
+        score = 0  # Start with 0, earn points for quality
         
         # HTF relevance (higher timeframe zones get more points)
         if zone.zone_type in [ZoneType.WEEKLY_HIGH, ZoneType.WEEKLY_LOW]:
@@ -152,7 +152,7 @@ class QRSScorer:
         Returns:
             Rejection clarity score (0-2)
         """
-        score = 1  # Give base points for any rejection candle
+        score = 0  # Start with 0, earn points for quality
         
         # Analyze candle characteristics
         body_size = rejection_candle.body_size
@@ -166,7 +166,7 @@ class QRSScorer:
         # More generous wick scoring
         max_wick_ratio = max(upper_wick / total_range, lower_wick / total_range)
         
-        if max_wick_ratio >= 0.3:  # Lowered threshold
+        if max_wick_ratio >= 0.5:  # Restored to original threshold
             score += 1
         
         # Engulfing pattern detection
@@ -259,7 +259,7 @@ class QRSScorer:
         Returns:
             Context score (0-2)
         """
-        score = 1  # Give base points for any context
+        score = 0  # Start with 0, earn points for quality
         
         if market_context is None:
             # Use setup data to infer context - be more generous

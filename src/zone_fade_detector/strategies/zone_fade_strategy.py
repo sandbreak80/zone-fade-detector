@@ -39,7 +39,7 @@ class ZoneFadeStrategy:
         self,
         min_qrs_score: int = 7,
         zone_tolerance: float = 0.002,
-        rejection_candle_min_wick_ratio: float = 0.1,  # Lowered from 0.3 to 0.1 (10%)
+        rejection_candle_min_wick_ratio: float = 0.3,  # Restored to original 30%
         choch_confirmation_bars: int = 2
     ):
         """
@@ -280,7 +280,7 @@ class ZoneFadeStrategy:
         # Check for volume spike confirmation
         try:
             is_volume_spike, spike_ratio, volume_analysis = self.volume_analyzer.detect_rejection_volume_spike(
-                bars, current_index, spike_threshold=1.5, lookback_bars=15  # Lowered threshold
+                bars, current_index, spike_threshold=1.8, lookback_bars=20  # Restored original threshold
             )
             
             volume_metrics.update({

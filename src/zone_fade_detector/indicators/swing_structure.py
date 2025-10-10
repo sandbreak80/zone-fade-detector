@@ -28,9 +28,9 @@ class SwingStructureDetector:
     
     def __init__(
         self,
-        lookback_bars: int = 10,  # Reduced from 20
-        min_swing_size: float = 0.05,  # Reduced from 0.1 (5% instead of 10%)
-        swing_confirmation_bars: int = 1  # Reduced from 2
+        lookback_bars: int = 20,  # Restored to original 20
+        min_swing_size: float = 0.1,  # Restored to original 10%
+        swing_confirmation_bars: int = 2  # Restored to original 2
     ):
         """
         Initialize swing structure detector.

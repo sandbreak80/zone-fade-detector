@@ -127,3 +127,25 @@ Thumbs.db
 *.temp
 debug_*.py
 temp_*.py
+
+# Backtesting output
+validation_output/
+/tmp/validation_output/
+
+# Results and validation data
+results/2024/efficient/
+results/2024/full/
+results/2024/december/
+results/manual_validation/entry_points/
+results/summaries/
+
+# Test output
+test_output/
+pytest_cache/
+
+# Performance data
+*.prof
+*.profile
+
+# Jupyter notebooks
+*.ipynb
