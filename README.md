@@ -66,11 +66,46 @@ zone-fade-detector/
    # Edit config.yaml with your preferences
    ```
 
+### Quick Setup
+
+```bash
+# Run the setup script
+./scripts/setup.sh
+
+# Or manually:
+make setup
+```
+
+### Quick Run Sequence
+
+```bash
+# 1. Smoke test
+make test && make typecheck && make format
+
+# 2. Replay (balanced/trend days)
+make replay START=2025-01-06 END=2025-01-10 SYMBOLS=SPY,QQQ,IWM PROVIDER=alpaca
+
+# 3. Inspect signals
+make signals-today  # or view signals/*.jsonl files
+
+# 4. Live (paper) run during RTH
+make live
+```
+
 ### Running the System
 
 ```bash
-# Start the detector
+# Standard mode (continuous monitoring)
 python -m zone_fade_detector.main
+
+# Live mode (RTH only)
+python -m zone_fade_detector.main --live
+
+# Replay mode (historical data)
+python -m zone_fade_detector.main --replay --start-date 2025-01-06 --end-date 2025-01-10 --symbols SPY,QQQ,IWM --provider alpaca
+
+# Test alert channels
+python -m zone_fade_detector.main --test-alerts
 
 # Run with custom configuration
 python -m zone_fade_detector.main --config config/production.yaml

@@ -61,6 +61,32 @@ from zone_fade_detector.utils.logging import setup_logging
     is_flag=True,
     help="Test alert channels and exit",
 )
+@click.option(
+    "--replay",
+    is_flag=True,
+    help="Run in replay mode for historical data",
+)
+@click.option(
+    "--start-date",
+    type=str,
+    help="Start date for replay mode (YYYY-MM-DD)",
+)
+@click.option(
+    "--end-date",
+    type=str,
+    help="End date for replay mode (YYYY-MM-DD)",
+)
+@click.option(
+    "--provider",
+    type=click.Choice(["alpaca", "polygon", "both"]),
+    default="alpaca",
+    help="Data provider for replay mode",
+)
+@click.option(
+    "--live",
+    is_flag=True,
+    help="Run in live mode during RTH",
+)
 def main(
     config: Path,
     log_level: Optional[str],
@@ -69,6 +95,11 @@ def main(
     dry_run: bool,
     verbose: bool,
     test_alerts: bool,
+    replay: bool,
+    start_date: Optional[str],
+    end_date: Optional[str],
+    provider: str,
+    live: bool,
 ) -> None:
     """
     Zone Fade Detector - Identify high-probability reversal setups.
@@ -104,6 +135,15 @@ def main(
         console.print(f"Symbols: {', '.join(config_data['symbols'])}")
         console.print(f"Poll Interval: {config_data['polling']['interval_seconds']}s")
         console.print(f"Dry Run: {config_data['development'].get('dry_run', False)}")
+        
+        # Handle different modes
+        if replay:
+            console.print(f"[yellow]Replay Mode: {start_date} to {end_date} using {provider}[/yellow]")
+        elif live:
+            console.print("[green]Live Mode: Running during RTH[/green]")
+        else:
+            console.print("[blue]Standard Mode: Continuous monitoring[/blue]")
+        
         console.print()
         
         # Initialize detector
@@ -115,8 +155,13 @@ def main(
             asyncio.run(test_alert_channels(detector))
             return
         
-        # Run the detector
-        asyncio.run(detector.run())
+        # Run in appropriate mode
+        if replay:
+            asyncio.run(run_replay_mode(detector, start_date, end_date, provider))
+        elif live:
+            asyncio.run(run_live_mode(detector))
+        else:
+            asyncio.run(detector.run())
         
     except KeyboardInterrupt:
         console.print("\n[yellow]Shutting down gracefully...[/yellow]")
@@ -153,6 +198,80 @@ async def test_alert_channels(detector: ZoneFadeDetector) -> None:
         console.print(f"  {channel}: {status}")
     
     console.print(f"\nOverall: {'✅ All channels working' if all(results.values()) else '❌ Some channels failed'}")
+
+
+async def run_replay_mode(detector: ZoneFadeDetector, start_date: str, end_date: str, provider: str) -> None:
+    """Run in replay mode for historical data."""
+    from datetime import datetime, timedelta
+    import json
+    import os
+    
+    console = Console()
+    console.print(f"[yellow]Starting replay mode: {start_date} to {end_date}[/yellow]")
+    
+    # Parse dates
+    start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+    end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+    
+    # Create signals directory
+    os.makedirs("signals", exist_ok=True)
+    
+    # Run replay for each day
+    current_date = start_dt
+    total_alerts = 0
+    
+    while current_date <= end_dt:
+        console.print(f"[blue]Processing {current_date.strftime('%Y-%m-%d')}...[/blue]")
+        
+        try:
+            # Fetch historical data for the day
+            symbol_data = await detector.data_manager.get_multiple_symbols(
+                detector.symbols,
+                current_date,
+                current_date + timedelta(days=1)
+            )
+            
+            # Process signals
+            alerts = detector.signal_processor.process_signals(symbol_data)
+            
+            # Save signals to file
+            if alerts:
+                signal_file = f"signals/{current_date.strftime('%Y-%m-%d')}.jsonl"
+                with open(signal_file, 'a') as f:
+                    for alert in alerts:
+                        f.write(json.dumps(alert.to_dict()) + '\n')
+                
+                console.print(f"[green]Found {len(alerts)} signals for {current_date.strftime('%Y-%m-%d')}[/green]")
+                total_alerts += len(alerts)
+            else:
+                console.print(f"[dim]No signals for {current_date.strftime('%Y-%m-%d')}[/dim]")
+        
+        except Exception as e:
+            console.print(f"[red]Error processing {current_date.strftime('%Y-%m-%d')}: {e}[/red]")
+        
+        current_date += timedelta(days=1)
+    
+    console.print(f"[bold green]Replay complete! Total alerts: {total_alerts}[/bold green]")
+
+
+async def run_live_mode(detector: ZoneFadeDetector) -> None:
+    """Run in live mode during RTH."""
+    from datetime import datetime, time
+    
+    console = Console()
+    console.print("[green]Starting live mode...[/green]")
+    
+    # Check if we're in RTH
+    now = datetime.now().time()
+    rth_start = time(9, 30)  # 9:30 AM
+    rth_end = time(16, 0)    # 4:00 PM
+    
+    if not (rth_start <= now <= rth_end):
+        console.print("[yellow]Warning: Not in regular trading hours (9:30 AM - 4:00 PM ET)[/yellow]")
+        console.print("[yellow]Continuing anyway...[/yellow]")
+    
+    # Run the detector
+    await detector.run()
 
 
 if __name__ == "__main__":

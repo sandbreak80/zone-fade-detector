@@ -170,3 +170,60 @@ init: setup-venv install-dev
 	@echo "3. Copy config/config.example.yaml to config/config.yaml"
 	@echo "4. Run tests: make test"
 	@echo "5. Start the detector: make run"
+
+# Quick run sequence targets
+typecheck:
+	mypy src/
+
+format:
+	black src/ tests/
+	isort src/ tests/
+
+# Replay mode for historical data
+replay:
+	@if [ -z "$(START)" ] || [ -z "$(END)" ] || [ -z "$(SYMBOLS)" ] || [ -z "$(PROVIDER)" ]; then \
+		echo "Usage: make replay START=2025-01-06 END=2025-01-10 SYMBOLS=SPY,QQQ,IWM PROVIDER=alpaca"; \
+		exit 1; \
+	fi
+	python -m zone_fade_detector.main --replay --start-date $(START) --end-date $(END) --symbols $(SYMBOLS) --provider $(PROVIDER)
+
+# Inspect today's signals
+signals-today:
+	@echo "Today's signals:"
+	@if [ -f "signals/$(shell date +%Y-%m-%d).jsonl" ]; then \
+		cat signals/$(shell date +%Y-%m-%d).jsonl | jq .; \
+	else \
+		echo "No signals found for today"; \
+	fi
+
+# Live run during RTH
+live:
+	python -m zone_fade_detector.main --live
+
+# Test alert channels
+test-alerts:
+	python -m zone_fade_detector.main --test-alerts
+
+# Generate sample configuration
+gen-config:
+	@echo "Generating sample configuration..."
+	@mkdir -p config
+	@cp config/config.example.yaml config/config.yaml
+	@echo "Configuration generated: config/config.yaml"
+	@echo "Please edit with your API keys and preferences"
+
+# Setup environment
+setup-env:
+	@echo "Setting up environment..."
+	@cp .env.example .env
+	@echo "Environment file created: .env"
+	@echo "Please edit with your API credentials"
+
+# Full setup
+setup: gen-config setup-env
+	@echo "Full setup complete!"
+	@echo "Next steps:"
+	@echo "1. Edit .env with your API keys"
+	@echo "2. Edit config/config.yaml with your preferences"
+	@echo "3. Run: make test-alerts"
+	@echo "4. Run: make live"
