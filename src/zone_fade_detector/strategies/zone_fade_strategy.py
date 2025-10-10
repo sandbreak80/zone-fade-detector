@@ -39,7 +39,7 @@ class ZoneFadeStrategy:
         self,
         min_qrs_score: int = 7,
         zone_tolerance: float = 0.002,
-        rejection_candle_min_wick_ratio: float = 0.3,
+        rejection_candle_min_wick_ratio: float = 0.1,  # Lowered from 0.3 to 0.1 (10%)
         choch_confirmation_bars: int = 2
     ):
         """
@@ -174,14 +174,15 @@ class ZoneFadeStrategy:
         else:
             direction = SetupDirection.LONG
         
-        # Check if current bar is a rejection candle
-        if not self._is_rejection_candle(current_bar, direction):
+        # Check if current bar is a rejection candle with volume spike
+        is_rejection, volume_metrics = self._is_rejection_candle_with_volume(
+            current_bar, direction, bars, current_index
+        )
+        if not is_rejection:
             return None
         
         # Check for CHoCH confirmation
-        choch_confirmed = self._check_choch_confirmation(
-            bars, current_index, direction
-        )
+        choch_confirmed = self._check_choch_confirmation(bars, current_index, direction)
         
         # Get additional data
         vwap_data = self.vwap_calculator.calculate_vwap(bars[:current_index + 1])
@@ -212,11 +213,8 @@ class ZoneFadeStrategy:
             setup, market_context, intermarket_data
         )
         
-        # Only return A-Setups
-        if setup.qrs_factors.is_a_setup:
-            return setup
-        
-        return None
+        # Return all setups (let the signal processor filter by QRS threshold)
+        return setup
     
     def _is_rejection_candle(
         self,
@@ -246,6 +244,60 @@ class ZoneFadeStrategy:
             # For long setups, look for long lower wick
             lower_wick_ratio = bar.lower_wick / total_range
             return lower_wick_ratio >= self.rejection_candle_min_wick_ratio
+    
+    def _is_rejection_candle_with_volume(
+        self,
+        bar: OHLCVBar,
+        direction: SetupDirection,
+        bars: List[OHLCVBar],
+        current_index: int
+    ) -> Tuple[bool, Dict[str, Any]]:
+        """
+        Check if a bar is a rejection candle with volume spike confirmation.
+        
+        Args:
+            bar: OHLCV bar to check
+            direction: Expected setup direction
+            bars: List of OHLCV bars for volume analysis
+            current_index: Current bar index
+            
+        Returns:
+            Tuple of (is_rejection, volume_metrics)
+        """
+        # First check basic rejection candle criteria
+        is_basic_rejection = self._is_rejection_candle(bar, direction)
+        
+        # Initialize volume metrics
+        volume_metrics = {
+            'is_volume_spike': False,
+            'spike_ratio': 0.0,
+            'volume_analysis': {}
+        }
+        
+        if not is_basic_rejection:
+            return False, volume_metrics
+        
+        # Check for volume spike confirmation
+        try:
+            is_volume_spike, spike_ratio, volume_analysis = self.volume_analyzer.detect_rejection_volume_spike(
+                bars, current_index, spike_threshold=1.5, lookback_bars=15  # Lowered threshold
+            )
+            
+            volume_metrics.update({
+                'is_volume_spike': is_volume_spike,
+                'spike_ratio': spike_ratio,
+                'volume_analysis': volume_analysis
+            })
+            
+            # Enhanced rejection prefers both wick rejection AND volume spike, but allows basic rejection
+            is_enhanced_rejection = is_basic_rejection  # Volume spike is bonus, not required
+            
+            return is_enhanced_rejection, volume_metrics
+            
+        except Exception as e:
+            self.logger.warning(f"Volume spike analysis failed: {e}")
+            # Fall back to basic rejection if volume analysis fails
+            return is_basic_rejection, volume_metrics
     
     def _check_choch_confirmation(
         self,

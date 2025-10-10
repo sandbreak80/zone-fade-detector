@@ -261,7 +261,7 @@ class SignalProcessor:
         cutoff_time = datetime.now() - timedelta(hours=1)
         self.recent_setups[symbol] = [
             setup for setup in self.recent_setups[symbol]
-            if setup.timestamp > cutoff_time
+            if setup.timestamp.replace(tzinfo=None) > cutoff_time
         ]
         
         # Add to history
@@ -270,7 +270,7 @@ class SignalProcessor:
         # Clean up old history
         self.setup_history = [
             setup for setup in self.setup_history
-            if setup.timestamp > cutoff_time
+            if setup.timestamp.replace(tzinfo=None) > cutoff_time
         ]
     
     def _update_intermarket_signals(

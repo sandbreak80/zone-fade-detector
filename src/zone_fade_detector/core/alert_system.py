@@ -210,28 +210,57 @@ class WebhookAlertChannel(AlertChannel):
             return False
         
         try:
-            # Prepare Discord webhook payload
+            # Prepare Discord webhook payload with enhanced details
             setup = alert.setup
+            qrs_factors = setup.qrs_factors
+            
+            # Calculate risk/reward ratios
+            risk = abs(setup.entry_price - setup.stop_loss)
+            reward1 = abs(setup.target_1 - setup.entry_price)
+            reward2 = abs(setup.target_2 - setup.entry_price)
+            rr1 = reward1 / risk if risk > 0 else 0
+            rr2 = reward2 / risk if risk > 0 else 0
+            
             payload = {
                 'content': f"🚨 **ZONE FADE ALERT** - {alert.alert_id}",
                 'embeds': [{
-                    'title': f"Zone Fade Setup - {setup.symbol}",
-                    'description': f"**Direction:** {setup.direction.value.upper()}\n**Zone Level:** ${setup.zone.level:.2f}\n**QRS Score:** {setup.qrs_score}/10",
+                    'title': f"🎯 Zone Fade Setup - {setup.symbol}",
+                    'description': f"**Direction:** {setup.direction.value.upper()}\n**Zone Level:** ${setup.zone.level:.2f}\n**QRS Score:** {setup.qrs_score}/10\n**Priority:** {alert.priority.upper()}",
                     'color': 0x00ff00 if setup.direction.value == 'long' else 0xff0000,
                     'fields': [
-                        {'name': 'Symbol', 'value': setup.symbol, 'inline': True},
-                        {'name': 'Direction', 'value': setup.direction.value.upper(), 'inline': True},
-                        {'name': 'Zone Level', 'value': f"${setup.zone.level:.2f}", 'inline': True},
-                        {'name': 'QRS Score', 'value': f"{setup.qrs_score}/10", 'inline': True},
-                        {'name': 'Entry Price', 'value': f"${setup.entry_price:.2f}", 'inline': True},
-                        {'name': 'Stop Loss', 'value': f"${setup.stop_loss:.2f}", 'inline': True},
-                        {'name': 'Target 1', 'value': f"${setup.target_1:.2f}", 'inline': True},
-                        {'name': 'Target 2', 'value': f"${setup.target_2:.2f}", 'inline': True}
+                        {'name': '📊 Symbol', 'value': setup.symbol, 'inline': True},
+                        {'name': '📈 Direction', 'value': setup.direction.value.upper(), 'inline': True},
+                        {'name': '🎯 Zone Level', 'value': f"${setup.zone.level:.2f}", 'inline': True},
+                        {'name': '⭐ QRS Score', 'value': f"{setup.qrs_score}/10", 'inline': True},
+                        {'name': '💰 Entry Price', 'value': f"${setup.entry_price:.2f}", 'inline': True},
+                        {'name': '🛑 Stop Loss', 'value': f"${setup.stop_loss:.2f}", 'inline': True},
+                        {'name': '🎯 Target 1', 'value': f"${setup.target_1:.2f}", 'inline': True},
+                        {'name': '🎯 Target 2', 'value': f"${setup.target_2:.2f}", 'inline': True},
+                        {'name': '⚖️ Risk/Reward 1', 'value': f"1:{rr1:.1f}", 'inline': True},
+                        {'name': '⚖️ Risk/Reward 2', 'value': f"1:{rr2:.1f}", 'inline': True},
+                        {'name': '📏 Risk Amount', 'value': f"${risk:.2f}", 'inline': True},
+                        {'name': '🕐 Timestamp', 'value': f"<t:{int(alert.created_at.timestamp())}:F>", 'inline': True}
                     ],
                     'timestamp': alert.created_at.isoformat(),
-                    'footer': {'text': 'Zone Fade Detector'}
+                    'footer': {'text': 'Zone Fade Detector • Automated Trading Signal'},
+                    'thumbnail': {'url': 'https://cdn.discordapp.com/emojis/📈.png'}
                 }]
             }
+            
+            # Add QRS factors breakdown if available
+            if qrs_factors:
+                qrs_breakdown = f"**QRS Factors Breakdown:**\n"
+                qrs_breakdown += f"• Zone Quality: {qrs_factors.zone_quality}/2\n"
+                qrs_breakdown += f"• Rejection Clarity: {qrs_factors.rejection_clarity}/2\n"
+                qrs_breakdown += f"• Structure Flip: {qrs_factors.structure_flip}/2\n"
+                qrs_breakdown += f"• Context: {qrs_factors.context}/2\n"
+                qrs_breakdown += f"• Intermarket Divergence: {qrs_factors.intermarket_divergence}/2"
+                
+                payload['embeds'][0]['fields'].append({
+                    'name': '📋 QRS Breakdown',
+                    'value': qrs_breakdown,
+                    'inline': False
+                })
             
             # Add signature if secret is provided
             if self.config.webhook_secret:

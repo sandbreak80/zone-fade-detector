@@ -28,9 +28,9 @@ class SwingStructureDetector:
     
     def __init__(
         self,
-        lookback_bars: int = 20,
-        min_swing_size: float = 0.1,
-        swing_confirmation_bars: int = 2
+        lookback_bars: int = 10,  # Reduced from 20
+        min_swing_size: float = 0.05,  # Reduced from 0.1 (5% instead of 10%)
+        swing_confirmation_bars: int = 1  # Reduced from 2
     ):
         """
         Initialize swing structure detector.
@@ -185,9 +185,9 @@ class SwingStructureDetector:
             if i != index and bars[i].high >= current_bar.high:
                 return False
         
-        # Check minimum swing size
+        # Check minimum swing size (more permissive)
         swing_size = self._calculate_swing_size(bars, index, is_high=True)
-        if swing_size < self.min_swing_size:
+        if swing_size < self.min_swing_size * 0.5:  # More permissive threshold
             return False
         
         return True
@@ -218,9 +218,9 @@ class SwingStructureDetector:
             if i != index and bars[i].low <= current_bar.low:
                 return False
         
-        # Check minimum swing size
+        # Check minimum swing size (more permissive)
         swing_size = self._calculate_swing_size(bars, index, is_high=False)
-        if swing_size < self.min_swing_size:
+        if swing_size < self.min_swing_size * 0.5:  # More permissive threshold
             return False
         
         return True

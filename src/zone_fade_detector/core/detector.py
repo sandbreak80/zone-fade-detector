@@ -61,23 +61,31 @@ class ZoneFadeDetector:
     
     def _create_data_manager(self) -> DataManager:
         """Create data manager from configuration."""
-        # Get API credentials from environment or config
+        import os
+        
+        # Get API credentials from environment variables
         alpaca_config = AlpacaConfig(
-            api_key=self.config.get('alpaca', {}).get('api_key', ''),
-            secret_key=self.config.get('alpaca', {}).get('secret_key', ''),
-            base_url=self.config.get('alpaca', {}).get('base_url', 'https://paper-api.alpaca.markets')
+            api_key=os.getenv('ALPACA_API_KEY', ''),
+            secret_key=os.getenv('ALPACA_SECRET_KEY', ''),
+            base_url=os.getenv('ALPACA_BASE_URL', 'https://paper-api.alpaca.markets')
         )
         
         polygon_config = PolygonConfig(
-            api_key=self.config.get('polygon', {}).get('api_key', '')
+            api_key=os.getenv('POLYGON_API_KEY', '')
         )
+        
+        from zone_fade_detector.data.data_manager import DataSource
+        
+        # Convert string to DataSource enum
+        primary_source_str = self.config.get('data', {}).get('primary_source', 'alpaca')
+        primary_source = DataSource(primary_source_str) if primary_source_str in [ds.value for ds in DataSource] else DataSource.ALPACA
         
         data_config = DataManagerConfig(
             alpaca_config=alpaca_config,
             polygon_config=polygon_config,
             cache_dir=self.config.get('cache', {}).get('dir', 'cache'),
             cache_ttl=self.config.get('cache', {}).get('ttl', 3600),
-            primary_source=self.config.get('data', {}).get('primary_source', 'alpaca')
+            primary_source=primary_source
         )
         
         return DataManager(data_config)
@@ -124,26 +132,44 @@ class ZoneFadeDetector:
     
     async def _detection_cycle(self) -> None:
         """Run one detection cycle."""
-        self.logger.debug("Starting detection cycle")
+        self.logger.info("🔍 Starting detection cycle...")
         
         # Fetch data for all symbols
+        self.logger.info("📊 Fetching market data for all symbols...")
         symbol_data = await self._fetch_symbol_data()
         
         if not symbol_data:
-            self.logger.warning("No data available for detection")
+            self.logger.warning("⚠️ No data available for detection")
             return
         
+        # Log data summary
+        for symbol, bars in symbol_data.items():
+            self.logger.info(f"📈 {symbol}: {len(bars)} bars available")
+            if bars:
+                latest_bar = bars[-1]
+                self.logger.info(f"   Latest: {latest_bar.timestamp} - O:{latest_bar.open:.2f} H:{latest_bar.high:.2f} L:{latest_bar.low:.2f} C:{latest_bar.close:.2f} V:{latest_bar.volume}")
+        
         # Process signals
+        self.logger.info("🎯 Processing signals through Zone Fade strategy...")
         alerts = self.signal_processor.process_signals(symbol_data)
+        
+        # Log signal processing results
+        if alerts:
+            self.logger.info(f"🚨 Generated {len(alerts)} Zone Fade alerts!")
+            for alert in alerts:
+                self.logger.info(f"   Alert {alert.alert_id}: {alert.setup.symbol} {alert.setup.direction.value.upper()} - QRS: {alert.setup.qrs_score}/10")
+        else:
+            self.logger.info("ℹ️ No Zone Fade setups detected in current data")
         
         # Handle alerts
         if alerts:
+            self.logger.info("📤 Sending alerts to configured channels...")
             await self._handle_alerts(alerts)
         
         # Update statistics
         self._update_stats(alerts)
         
-        self.logger.debug(f"Detection cycle completed: {len(alerts)} alerts generated")
+        self.logger.info(f"✅ Detection cycle completed: {len(alerts)} alerts generated")
     
     async def _fetch_symbol_data(self) -> Dict[str, List[OHLCVBar]]:
         """Fetch data for all symbols."""

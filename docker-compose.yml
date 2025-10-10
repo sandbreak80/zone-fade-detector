@@ -52,7 +52,7 @@ services:
       start_period: 40s
     
     # Command override (can be customized)
-    command: ["python", "-m", "zone_fade_detector.main"]
+    command: ["--mode", "standard", "--verbose"]
     
     # Logging configuration
     logging:

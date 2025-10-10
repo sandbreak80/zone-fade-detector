@@ -121,6 +121,140 @@ class VolumeAnalyzer:
         volume_analysis = self.analyze_volume(bars, current_index)
         return volume_analysis.is_contraction if volume_analysis else False
     
+    def detect_volume_spike(
+        self,
+        bars: List[OHLCVBar],
+        current_index: Optional[int] = None,
+        spike_threshold: float = 2.0,
+        lookback_bars: int = 10
+    ) -> Tuple[bool, float]:
+        """
+        Detect volume spike on rejection candle.
+        
+        Args:
+            bars: List of OHLCV bars
+            current_index: Current bar index (defaults to last bar)
+            spike_threshold: Volume spike multiplier threshold (default: 2.0x)
+            lookback_bars: Number of bars to look back for average volume
+            
+        Returns:
+            Tuple of (is_spike, spike_ratio)
+        """
+        if not bars:
+            return False, 0.0
+        
+        if current_index is None:
+            current_index = len(bars) - 1
+        
+        if current_index < lookback_bars:
+            return False, 0.0
+        
+        current_bar = bars[current_index]
+        current_volume = current_bar.volume
+        
+        if current_volume == 0:
+            return False, 0.0
+        
+        # Calculate average volume over lookback period
+        lookback_start = max(0, current_index - lookback_bars)
+        lookback_bars_data = bars[lookback_start:current_index]
+        
+        if not lookback_bars_data:
+            return False, 0.0
+        
+        # Calculate average volume (excluding zero volumes)
+        valid_volumes = [bar.volume for bar in lookback_bars_data if bar.volume > 0]
+        if not valid_volumes:
+            return False, 0.0
+        
+        avg_volume = sum(valid_volumes) / len(valid_volumes)
+        
+        if avg_volume == 0:
+            return False, 0.0
+        
+        # Calculate spike ratio
+        spike_ratio = current_volume / avg_volume
+        
+        # Check if it's a spike
+        is_spike = spike_ratio >= spike_threshold
+        
+        return is_spike, spike_ratio
+    
+    def detect_rejection_volume_spike(
+        self,
+        bars: List[OHLCVBar],
+        current_index: Optional[int] = None,
+        spike_threshold: float = 1.8,
+        lookback_bars: int = 15
+    ) -> Tuple[bool, float, Dict[str, float]]:
+        """
+        Detect volume spike specifically for rejection candles.
+        
+        Args:
+            bars: List of OHLCV bars
+            current_index: Current bar index (defaults to last bar)
+            spike_threshold: Volume spike multiplier threshold (default: 1.8x)
+            lookback_bars: Number of bars to look back for average volume
+            
+        Returns:
+            Tuple of (is_spike, spike_ratio, volume_metrics)
+        """
+        if not bars:
+            return False, 0.0, {}
+        
+        if current_index is None:
+            current_index = len(bars) - 1
+        
+        if current_index < lookback_bars:
+            return False, 0.0, {}
+        
+        current_bar = bars[current_index]
+        current_volume = current_bar.volume
+        
+        if current_volume == 0:
+            return False, 0.0, {}
+        
+        # Calculate volume metrics
+        lookback_start = max(0, current_index - lookback_bars)
+        lookback_bars_data = bars[lookback_start:current_index]
+        
+        if not lookback_bars_data:
+            return False, 0.0, {}
+        
+        # Calculate various volume metrics
+        valid_volumes = [bar.volume for bar in lookback_bars_data if bar.volume > 0]
+        if not valid_volumes:
+            return False, 0.0, {}
+        
+        avg_volume = sum(valid_volumes) / len(valid_volumes)
+        max_volume = max(valid_volumes)
+        median_volume = sorted(valid_volumes)[len(valid_volumes) // 2]
+        
+        # Calculate spike ratios
+        avg_spike_ratio = current_volume / avg_volume if avg_volume > 0 else 0
+        max_spike_ratio = current_volume / max_volume if max_volume > 0 else 0
+        median_spike_ratio = current_volume / median_volume if median_volume > 0 else 0
+        
+        # Check if it's a rejection volume spike
+        # Use a combination of metrics for more accurate detection
+        is_spike = (
+            avg_spike_ratio >= spike_threshold and
+            max_spike_ratio >= 1.2 and  # At least 20% above recent max
+            median_spike_ratio >= 1.5   # At least 50% above median
+        )
+        
+        volume_metrics = {
+            'current_volume': current_volume,
+            'avg_volume': avg_volume,
+            'max_volume': max_volume,
+            'median_volume': median_volume,
+            'avg_spike_ratio': avg_spike_ratio,
+            'max_spike_ratio': max_spike_ratio,
+            'median_spike_ratio': median_spike_ratio
+        }
+        
+        return is_spike, avg_spike_ratio, volume_metrics
+    
     def calculate_volume_profile(
         self,
         bars: List[OHLCVBar],

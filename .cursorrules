@@ -1,143 +1,187 @@
 # Zone Fade Detector - Cursor Rules
 
-## Project Overview
-This is a Python 3.11+ project for detecting Zone Fade trading setups using 15-minute delayed Alpaca and Polygon REST data. The project treats delayed data as real-time and uses no websockets.
+## 🎯 Project Overview
+This is a sophisticated trading system for detecting Zone Fade setups using higher-timeframe zones, rejection candles, and volume analysis.
 
-## Code Style & Standards
+## 🚫 Critical Rules
 
-### Python Version & Environment
-- Use Python 3.11+ features and syntax
-- Always use type hints for function parameters and return values
-- Use dataclasses or Pydantic models for data structures
-- Prefer f-strings over .format() or % formatting
-- Use pathlib.Path instead of os.path for file operations
+### Git Operations
+- **NEVER run `git push origin main`** - This is strictly forbidden
+- Always use `git push origin <branch-name>` for feature branches
+- Use pull requests for all changes to main branch
+- Commit frequently with descriptive messages
 
-### Code Organization
-- Follow the existing package structure: core/, data/, indicators/, strategies/, utils/
-- Use absolute imports from the package root
+### Docker Operations
+- Always use `timeout` command for shell operations to prevent hanging
+- Use `docker-compose` instead of `docker compose` for compatibility
+- Always specify `--entrypoint=""` when running custom commands in containers
+- Use `-v $(pwd):/app` for volume mounting
+
+### Code Quality
+- Follow PEP 8 Python style guidelines
+- Use type hints for all function parameters and return values
+- Write comprehensive docstrings for all public methods
 - Keep functions focused and single-purpose
 - Use descriptive variable and function names
-- Add comprehensive docstrings for all public functions and classes
-
-### Error Handling
-- Use specific exception types, not bare except clauses
-- Log errors with appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-- Handle API rate limits and network errors gracefully
-- Use context managers for resource management
 
 ### Testing
-- Write unit tests for all core logic
-- Use pytest as the testing framework
-- Aim for >90% code coverage
-- Mock external API calls in unit tests
-- Use fixtures for common test data
-
-### Data Handling
-- Use pandas DataFrames for OHLCV data with proper datetime indexing
-- Validate data integrity before processing
-- Handle missing data explicitly
-- Use numpy for mathematical calculations
-
-### API Integration
-- Implement proper rate limiting for REST API calls
-- Use retry logic with exponential backoff
-- Cache API responses when appropriate
-- Handle authentication errors gracefully
-
-### Configuration
-- Use environment variables for sensitive data (API keys)
-- Create configuration classes for non-sensitive settings
-- Validate configuration on startup
-- Support different environments (dev, test, prod)
-
-### Logging
-- Use structured logging with consistent format
-- Log at appropriate levels
-- Include relevant context in log messages
-- Use log rotation for production
-
-### Performance
-- Use async/await for I/O operations when beneficial
-- Cache expensive calculations
-- Use vectorized operations with pandas/numpy
-- Profile code for bottlenecks
-
-### Security
-- Never commit API keys or sensitive data
-- Use environment variables for secrets
-- Validate all input data
-- Use HTTPS for all API calls
+- Write unit tests for all new functionality
+- Add integration tests for complex workflows
+- Ensure all tests pass before committing
+- Use descriptive test names that explain what is being tested
 
 ### Documentation
-- Write clear, concise docstrings
-- Include examples in docstrings where helpful
-- Keep README.md updated
-- Document API rate limits and usage patterns
+- Update README.md for user-facing changes
+- Add docstrings for new functions/classes
+- Update CHANGELOG.md for significant changes
+- Include examples for new features
 
-## Project-Specific Rules
+## 🏗️ Architecture Guidelines
 
-### Trading Logic
-- Implement Zone Fade criteria exactly as specified
-- Use clear, descriptive names for trading concepts
-- Separate signal detection from execution logic
-- Validate all trading signals before recording
+### Component Design
+- Keep components loosely coupled
+- Use dependency injection where appropriate
+- Follow the existing pattern for new indicators
+- Maintain separation between data, logic, and presentation
 
-### Data Sources
-- Use only Alpaca and Polygon REST APIs
-- Handle 15-minute delayed data appropriately
-- Implement proper data validation
-- Cache historical data when possible
+### Error Handling
+- Use specific exception types
+- Provide meaningful error messages
+- Include fallback mechanisms where appropriate
+- Log errors with appropriate levels
 
-### Indicators
-- Implement VWAP, Opening Range, and swing structure detection
-- Use efficient algorithms for indicator calculations
-- Validate indicator values before use
-- Document calculation methods
-
-### Quality Rating System (QRS)
-- Implement the 5-factor scoring system exactly as specified
-- Use clear thresholds for A-Setup classification
-- Log scoring details for debugging
-- Validate all scoring inputs
-
-## File Naming Conventions
-- Use snake_case for all Python files
-- Use descriptive names that indicate purpose
-- Group related functionality in modules
-- Use __init__.py files to expose public APIs
-
-## Import Organization
-1. Standard library imports
-2. Third-party imports (alpaca-py, polygon, pandas, numpy)
-3. Local package imports
-4. Separate groups with blank lines
-
-## Comments & Documentation
-- Write self-documenting code
-- Add comments for complex trading logic
-- Document any deviations from standard practices
-- Include TODO comments for future improvements
-
-## Git Workflow
-- Use meaningful commit messages
-- Create feature branches for new functionality
-- Write descriptive pull request descriptions
-- Keep commits focused and atomic
-
-## Dependencies
-- Pin all dependency versions
-- Use requirements.txt for exact versions
-- Separate dev dependencies in requirements-dev.txt
-- Regularly update dependencies for security
-
-## Performance Considerations
+### Performance
+- Consider memory usage for rolling windows
 - Optimize for 30-second polling intervals
 - Use efficient data structures
-- Minimize memory usage
-- Cache frequently accessed data
+- Profile performance-critical code
 
-## Error Recovery
-- Implement graceful degradation
-- Log all errors with context
-- Provide meaningful error messages
-- Support manual intervention when needed
+## 📊 Trading Strategy Rules
+
+### Zone Fade Detection
+- Always validate both wick rejection AND volume spike
+- Use QRS scoring for setup quality assessment
+- Implement proper CHoCH confirmation
+- Maintain HTF zone relevance
+
+### Data Management
+- Use persistent storage for historical data
+- Implement proper caching mechanisms
+- Handle API rate limits gracefully
+- Validate data quality before processing
+
+### Alert System
+- Use multiple alert channels (console, file, Discord)
+- Include comprehensive setup information
+- Format alerts for readability
+- Handle alert failures gracefully
+
+## 🔧 Development Workflow
+
+### Before Starting Work
+1. Check current todos and priorities
+2. Understand the existing architecture
+3. Review related code and documentation
+4. Plan the implementation approach
+
+### During Development
+1. Make small, focused changes
+2. Test frequently
+3. Commit with descriptive messages
+4. Update documentation as needed
+
+### Before Committing
+1. Run all tests
+2. Check code style
+3. Update documentation
+4. Review changes
+5. Write descriptive commit message
+
+## 📋 Current Priorities
+
+### High Priority
+- Rolling window management system
+- Session state management
+- Micro window analysis
+- Parallel cross-symbol processing
+- ES/NQ/RTY futures integration
+
+### Medium Priority
+- Additional indicators
+- Performance optimizations
+- Enhanced alert formatting
+- More comprehensive backtesting
+
+### Low Priority
+- UI improvements
+- Additional documentation
+- Code refactoring
+- Test coverage improvements
+
+## 🚨 Common Pitfalls to Avoid
+
+### Git Issues
+- Never push directly to main
+- Don't commit large files or sensitive data
+- Always use descriptive commit messages
+- Don't force push to shared branches
+
+### Docker Issues
+- Don't run commands without timeout
+- Always use proper volume mounting
+- Don't forget to specify entrypoint for custom commands
+- Don't run containers without proper environment setup
+
+### Code Issues
+- Don't skip error handling
+- Don't ignore type hints
+- Don't write functions that are too long
+- Don't skip documentation
+
+### Trading Issues
+- Don't ignore volume analysis
+- Don't skip QRS scoring
+- Don't forget CHoCH confirmation
+- Don't use stale data
+
+## 📚 Resources
+
+### Documentation
+- README.md - Project overview and setup
+- CONTRIBUTING.md - Contribution guidelines
+- CHANGELOG.md - Version history
+- STRATEGY_ANALYSIS.md - Strategy implementation analysis
+
+### Code Structure
+- src/zone_fade_detector/ - Main source code
+- tests/ - Test suite
+- config/ - Configuration files
+- docs/ - Additional documentation
+
+### Key Files
+- docker-compose.yml - Container orchestration
+- requirements.txt - Python dependencies
+- pyproject.toml - Project configuration
+- .env.example - Environment variables template
+
+## 🎯 Success Metrics
+
+### Code Quality
+- >80% test coverage
+- All tests passing
+- No linting errors
+- Comprehensive documentation
+
+### Trading Performance
+- Accurate zone detection
+- Reliable rejection candle validation
+- Effective QRS scoring
+- Successful alert generation
+
+### System Performance
+- 30-second polling intervals
+- Efficient memory usage
+- Reliable data processing
+- Stable alert delivery
+
+Remember: The goal is to build a robust, reliable trading system that accurately identifies Zone Fade setups while maintaining high code quality and performance standards.

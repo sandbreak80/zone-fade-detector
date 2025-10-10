@@ -1,313 +1,204 @@
 # Zone Fade Detector
 
-A Docker-based trading system that identifies high-probability Zone Fade reversal setups using 15-minute delayed market data from Alpaca and Polygon APIs.
+A sophisticated trading system for detecting Zone Fade setups using higher-timeframe zones, rejection candles, and volume analysis.
 
 ## 🎯 Overview
 
-The Zone Fade Detector automates the identification of reversal trading opportunities when price reaches higher-timeframe zones and shows signs of exhaustion. The system processes real-time market data for SPY, QQQ, and IWM (proxies for /ES, /NQ, /RTY futures) and generates alerts for A-grade setups based on a comprehensive quality rating system.
+The Zone Fade Detector implements a comprehensive trading strategy that identifies high-probability reversal setups by analyzing:
 
-## 🏗️ Architecture
-
-```
-zone-fade-detector/
-├── src/zone_fade_detector/          # Main package
-│   ├── core/                        # Core trading logic
-│   ├── data/                        # Data management and API integration
-│   ├── indicators/                  # Technical indicators (VWAP, OR, swing structure)
-│   ├── strategies/                  # Trading strategy implementations
-│   └── utils/                       # Utility functions and helpers
-├── tests/                           # Test suite
-│   ├── unit/                        # Unit tests
-│   └── integration/                 # Integration tests
-├── docs/                            # Documentation
-├── config/                          # Configuration files
-├── scripts/                         # Utility scripts
-├── docker-compose.yml               # Docker Compose configuration
-├── Dockerfile                       # Docker image definition
-└── requirements.txt                 # Production dependencies
-```
+- **Higher-Timeframe Zones**: Daily and weekly supply/demand levels
+- **Rejection Candles**: Price action showing initiative exhaustion
+- **Volume Analysis**: Volume spike confirmation on rejection
+- **CHoCH Detection**: Change of Character confirmation
+- **Quality Rating System (QRS)**: 5-factor setup scoring
 
 ## 🚀 Quick Start
 
-### ⚠️ IMPORTANT: Docker-Only Setup
-
-**This project uses Docker exclusively. DO NOT install Python, pip, or create virtual environments locally.**
-
-- ❌ **DO NOT** run `pip install` or `python -m venv` on your host system
-- ❌ **DO NOT** install Python packages globally or in local virtual environments
-- ✅ **ONLY** use Docker containers for all development and execution
-- ✅ All Python dependencies are managed within Docker containers
-
 ### Prerequisites
 
-- Docker Engine 20.10+
-- Docker Compose 2.0+
-- At least 2GB RAM and 1 CPU core available
+- Docker and Docker Compose
 - Alpaca API credentials
-- Polygon API credentials
+- Polygon API credentials (optional)
+- Discord webhook URL (optional)
 
 ### Installation
 
-1. **Clone the repository**
+1. **Clone the repository:**
    ```bash
-   git clone https://github.com/sandbreak80/zone-fade-detector.git
+   git clone <repository-url>
    cd zone-fade-detector
    ```
 
-2. **Configure environment variables**
+2. **Set up environment:**
    ```bash
-   cp .env.docker .env
+   cp .env.example .env
    # Edit .env with your API credentials
    ```
 
-3. **Configure the application**
+3. **Build and run:**
    ```bash
-   cp config/config.docker.yaml config/config.yaml
-   # Edit config.yaml with your preferences
+   docker-compose up --build
    ```
 
-### Running the System
+### Configuration
 
+Edit `config/config.yaml` to customize:
+- Symbols to monitor
+- QRS thresholds
+- Alert channels
+- Detection parameters
+
+## 📊 Features
+
+### Core Detection
+- **Zone Detection**: Prior day/week highs/lows, value areas, opening ranges
+- **Rejection Analysis**: Wick analysis with volume spike confirmation
+- **CHoCH Detection**: Swing structure analysis for momentum shifts
+- **QRS Scoring**: 5-factor quality rating system
+
+### Alert System
+- **Console Alerts**: Real-time console output
+- **File Logging**: Persistent alert logs
+- **Discord Integration**: Real-time webhook alerts
+- **Rich Formatting**: Color-coded, detailed alert information
+
+### Data Management
+- **Alpaca Integration**: Real-time and historical data
+- **Polygon Integration**: Additional data sources
+- **Persistent Caching**: Efficient data storage
+- **Backtesting Support**: Historical data analysis
+
+## 🏗️ Architecture
+
+### Core Components
+- **ZoneFadeStrategy**: Main strategy implementation
+- **SignalProcessor**: Setup filtering and coordination
+- **QRSScorer**: Quality rating system
+- **AlertSystem**: Multi-channel alert management
+
+### Indicators
+- **VWAPCalculator**: Volume-weighted average price
+- **SwingStructureDetector**: CHoCH detection
+- **VolumeAnalyzer**: Volume spike analysis
+- **OpeningRangeCalculator**: Session range analysis
+
+### Data Layer
+- **AlpacaClient**: Real-time data fetching
+- **PolygonClient**: Additional data sources
+- **DataManager**: Caching and persistence
+
+## 📈 Strategy Details
+
+### Zone Fade Setup Requirements
+1. **HTF Zone Approach**: Price approaching higher-timeframe zone
+2. **Rejection Candle**: Clear wick rejection with volume spike
+3. **CHoCH Confirmation**: Change of character in swing structure
+4. **Quality Score**: QRS score above threshold (default: 5/10)
+
+### QRS Scoring Factors
+1. **Zone Quality** (0-2 points): HTF relevance and strength
+2. **Rejection Clarity** (0-2 points): Wick analysis + volume spike
+3. **Structure Flip** (0-2 points): CHoCH confirmation
+4. **Context** (0-2 points): Market environment analysis
+5. **Intermarket Divergence** (0-2 points): Cross-asset confirmation
+
+## 🔧 Usage
+
+### Live Trading
 ```bash
-# Build and run in standard mode (continuous monitoring)
 docker-compose up zone-fade-detector
-
-# Run in background
-docker-compose up -d zone-fade-detector
-
-# Live mode (RTH only)
-docker-compose run --rm zone-fade-detector --mode live --verbose
-
-# Replay mode (historical data)
-docker-compose run --rm zone-fade-detector \
-  --mode replay \
-  --start-date 2024-01-01 \
-  --end-date 2024-01-31 \
-  --provider alpaca
-
-# Test alert channels
-docker-compose run --rm zone-fade-detector --test-alerts
-
-# View logs
-docker-compose logs -f zone-fade-detector
 ```
 
-## 📊 Zone Fade Strategy
+### Backtesting
+```bash
+# Download historical data
+docker-compose run zone-fade-detector python download_2024_data.py
 
-### What is a Zone Fade?
+# Run backtesting
+docker-compose run zone-fade-detector python test_2024_detection.py
+```
 
-A Zone Fade is a high-probability reversal setup that occurs when:
+### Development
+```bash
+# Run in development mode
+docker-compose up zone-fade-detector-dev
 
-1. **Price approaches a higher-timeframe zone** (support/resistance, supply/demand)
-2. **Market shows signs of exhaustion** (lack of initiative, low follow-through volume)
-3. **Price fails to accept beyond the zone** and closes back inside
-4. **A rejection candle forms** at or beyond the zone
-5. **A Change of Character (CHoCH)** occurs in the opposite direction
+# Run tests
+docker-compose run zone-fade-detector-test pytest
+```
 
-### Entry Criteria
-
-- **Trigger**: CHoCH opposite prior direction + close back inside zone
-- **Confirmation**: Candle closes in favor of reversal
-- **Entry Method**: Limit or market order at mid-zone or on CHoCH confirmation
-- **Stop Placement**: 1-2 ticks beyond zone back or CHoCH invalidation swing
-- **Targets**: T1 (VWAP/range mid), T2 (opposite range edge)
-
-### Quality Rating System (QRS)
-
-The system uses a 5-factor scoring system to rate setup quality:
-
-| Factor | Points | Description |
-|--------|--------|-------------|
-| Zone Quality | 0-2 | HTF relevance and strength |
-| Rejection Clarity | 0-2 | Clear rejection candle formation |
-| Structure Flip | 0-2 | CHoCH confirmation |
-| Context | 0-2 | Balanced market (not trend day) |
-| Intermarket Divergence | 0-2 | ETF divergence confirmation |
-
-**A-Setup Threshold**: ≥7 points (out of 10 total)
-
-## 🔧 Configuration
+## 📋 Configuration
 
 ### Environment Variables
+- `ALPACA_API_KEY`: Alpaca API key
+- `ALPACA_SECRET_KEY`: Alpaca secret key
+- `POLYGON_API_KEY`: Polygon API key (optional)
+- `DISCORD_WEBHOOK_URL`: Discord webhook URL (optional)
+- `LOG_LEVEL`: Logging level (INFO, DEBUG, etc.)
 
-```bash
-# API Credentials
-ALPACA_API_KEY=your_alpaca_key
-ALPACA_SECRET_KEY=your_alpaca_secret
-POLYGON_API_KEY=your_polygon_key
-
-# Discord Webhook (for alerts)
-DISCORD_WEBHOOK_URL=https://discordapp.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
-
-# System Configuration
-LOG_LEVEL=INFO
-POLL_INTERVAL=30
-```
-
-### Configuration File (config/config.yaml)
-
-```yaml
-symbols:
-  - SPY
-  - QQQ
-  - IWM
-
-polling:
-  interval_seconds: 30
-  max_retries: 3
-  timeout_seconds: 10
-
-indicators:
-  vwap:
-    enabled: true
-    standard_deviations: [1, 2]
-  opening_range:
-    duration_minutes: 30
-  swing_structure:
-    lookback_bars: 20
-
-zones:
-  prior_day: true
-  weekly: true
-  value_area: true
-
-alerts:
-  channels: ['console', 'file', 'webhook']
-  min_qrs_score: 7
-  deduplication_minutes: 5
-  
-  webhook:
-    enabled: true
-    url: ${DISCORD_WEBHOOK_URL}
-    timeout: 5
-```
-
-## 📈 Technical Indicators
-
-### VWAP (Volume Weighted Average Price)
-- Calculated from RTH open using minute bars
-- Includes 1σ and 2σ standard deviation bands
-- Used for trend identification and target levels
-
-### Opening Range (OR)
-- First 30 minutes of regular trading hours
-- Tracks OR high and OR low levels
-- Used for intraday support/resistance
-
-### Swing Structure Detection
-- Identifies local swing highs and lows
-- Detects Change of Character (CHoCH) patterns
-- Essential for reversal confirmation
-
-### Initiative Analysis
-- Volume expansion ratios (impulse vs pullback)
-- Candle spread vs volume mismatch
-- VWAP slope analysis near zones
-
-## 🔌 API Integration
-
-### Alpaca API
-- **Data**: SPY, QQQ, IWM OHLCV bars
-- **Frequency**: 1-minute bars (15-minute delayed)
-- **Rate Limit**: 200 requests/minute
-- **Library**: `alpaca-py`
-
-### Polygon API
-- **Data**: Aggregates and previous day bars
-- **Frequency**: 1-minute bars (15-minute delayed)
-- **Rate Limit**: 5 requests/minute (free tier)
-- **Library**: `polygon-api-client`
+### Configuration File
+Edit `config/config.yaml` for:
+- Symbol lists
+- QRS thresholds
+- Alert settings
+- Detection parameters
 
 ## 🧪 Testing
 
-### Running Tests
-
+### Unit Tests
 ```bash
-# Run all tests in Docker
-docker-compose run --rm zone-fade-detector-test
-
-# Run with coverage
-docker-compose run --rm zone-fade-detector-test pytest --cov=zone_fade_detector
-
-# Run specific test categories
-docker-compose run --rm zone-fade-detector-test pytest tests/unit/
-docker-compose run --rm zone-fade-detector-test pytest tests/integration/
-
-# Run with verbose output
-docker-compose run --rm zone-fade-detector-test pytest -v
+docker-compose run zone-fade-detector-test pytest tests/unit/
 ```
 
-### Test Structure
-
-- **Unit Tests**: Test individual components and functions
-- **Integration Tests**: Test API integration and data flow
-- **Mock Data**: Use factory-boy for generating test data
-- **Coverage**: Aim for >90% code coverage
-
-## 📚 Documentation
-
-- **PRD**: [Product Requirements Document](docs/PRD.md)
-- **Docker Setup**: [Docker Deployment Guide](README.Docker.md)
-- **Discord Setup**: [Discord Webhook Setup Guide](docs/DISCORD_SETUP.md)
-- **API Reference**: Generated from docstrings
-- **Strategy Guide**: Detailed trading strategy documentation
-- **Configuration Guide**: Complete configuration options
-
-## 🚨 Alerts
-
-The system supports multiple alert channels:
-
-- **Console**: Real-time console output
-- **File**: Log file output
-- **Discord Webhook**: Real-time Discord notifications
-
-### Alert Format
-
-```json
-{
-  "timestamp": "2024-01-15T14:30:00Z",
-  "symbol": "SPY",
-  "direction": "long",
-  "zone_level": 485.50,
-  "zone_type": "prior_day_high",
-  "qrs_score": 8,
-  "rejection_candle": {
-    "open": 485.20,
-    "high": 485.80,
-    "low": 484.90,
-    "close": 485.10,
-    "volume": 1500000
-  },
-  "choch_confirmed": true,
-  "vwap_level": 484.75,
-  "target_1": 485.25,
-  "target_2": 486.00
-}
+### Integration Tests
+```bash
+docker-compose run zone-fade-detector-test pytest tests/integration/
 ```
 
-## 🔒 Security
+### Manual Testing
+```bash
+# Test Discord webhook
+docker-compose run zone-fade-detector python tests/integration/test_discord_simple.py
 
-- API credentials stored in environment variables
-- No hardcoded secrets in source code
-- HTTPS for all external API calls
-- Input validation for all external data
-- Secure configuration file handling
+# Test volume spike detection
+docker-compose run zone-fade-detector python tests/integration/test_volume_spike.py
+```
 
 ## 📊 Performance
 
-- **Data Processing**: <5 seconds from API response to alert
-- **Memory Usage**: <1GB for typical operation
-- **CPU Usage**: <50% on modern hardware
-- **Uptime**: >99% during market hours
+### Current Capabilities
+- **Real-time Processing**: 30-second polling intervals
+- **Multi-symbol Support**: SPY, QQQ, IWM (configurable)
+- **Volume Spike Detection**: 1.5x-4.5x volume spikes detected
+- **QRS Scoring**: 5-6/10 average scores achieved
+
+### Backtesting Results
+- **2024 Data**: 3 Zone Fade alerts generated
+- **Zone Types**: Value Area Low, Weekly Low
+- **QRS Scores**: 5-6/10 (good quality)
+- **Discord Integration**: ✅ Working
+
+## 🚧 Roadmap
+
+### In Progress
+- Volume spike detection implementation ✅
+- Discord webhook integration ✅
+- QRS scoring enhancement ✅
+
+### Planned
+- Rolling window management system
+- Session state management
+- Micro window analysis
+- Parallel cross-symbol processing
+- ES/NQ/RTY futures integration
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
+4. Add tests
+5. Submit a pull request
 
 ## 📄 License
 
@@ -315,66 +206,19 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## ⚠️ Disclaimer
 
-This software is for educational and research purposes only. Trading involves substantial risk of loss and is not suitable for all investors. Past performance is not indicative of future results. Always do your own research and consider consulting with a financial advisor before making trading decisions.
+This software is for educational and research purposes only. Trading involves risk and may not be suitable for all investors. Past performance does not guarantee future results.
 
-## 🆘 Support
+## 📞 Support
 
-- **Issues**: Report bugs and request features via GitHub Issues
-- **Documentation**: Check the docs/ directory for detailed guides
-- **Discussions**: Use GitHub Discussions for questions and community support
+For questions or issues:
+- Create an issue on GitHub
+- Check the documentation in `/docs`
+- Review the configuration examples
 
-## 🐛 Troubleshooting
+## 📚 Documentation
 
-### Common Issues
-
-**❌ "Python not found" or "pip install" errors:**
-- This project uses Docker exclusively
-- Do NOT install Python or pip on your host system
-- Use `docker-compose` commands instead of direct Python commands
-
-**❌ "Module not found" errors:**
-- All dependencies are installed inside Docker containers
-- Use `docker-compose run --rm zone-fade-detector python -c "import module"`
-- Check that you're running commands inside Docker containers
-
-**❌ Permission errors:**
-- Ensure Docker has proper permissions
-- Use `docker-compose` commands instead of direct Docker commands
-- Check volume mount permissions in docker-compose.yml
-
-**✅ Correct way to run commands:**
-```bash
-# Instead of: python -m zone_fade_detector.main
-docker-compose run --rm zone-fade-detector
-
-# Instead of: pip install package
-docker-compose exec zone-fade-detector pip install package
-
-# Instead of: pytest tests/
-docker-compose run --rm zone-fade-detector-test
-```
-
-## 🔄 Changelog
-
-### Version 0.1.0 (Initial Release)
-- Basic Zone Fade detection logic
-- Alpaca and Polygon API integration
-- VWAP and swing structure indicators
-- Quality Rating System (QRS)
-- Console and file alert channels
-- Comprehensive test suite
-- Documentation and configuration
-
-## 🗺️ Roadmap
-
-### Phase 2
-- Web dashboard for setup visualization
-- Historical backtesting capabilities
-- Additional technical indicators
-- Multi-timeframe analysis
-
-### Phase 3
-- Machine learning for setup quality prediction
-- Integration with trading platforms
-- Real-time data feed integration
-- Advanced risk management features
+- [Setup Guide](SETUP_GUIDE.md)
+- [Docker Guide](README.Docker.md)
+- [Strategy Analysis](STRATEGY_ANALYSIS.md)
+- [Volume Spike Implementation](VOLUME_SPIKE_IMPLEMENTATION.md)
+- [Operational Analysis](OPERATIONAL_ANALYSIS.md)

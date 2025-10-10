@@ -125,22 +125,18 @@ class QRSScorer:
         Returns:
             Zone quality score (0-2)
         """
-        score = 0
+        score = 1  # Give base points for any zone
         
         # HTF relevance (higher timeframe zones get more points)
         if zone.zone_type in [ZoneType.WEEKLY_HIGH, ZoneType.WEEKLY_LOW]:
-            score += 2
+            score += 1
         elif zone.zone_type in [ZoneType.PRIOR_DAY_HIGH, ZoneType.PRIOR_DAY_LOW]:
-            score += 1
+            score += 0.5
         elif zone.zone_type in [ZoneType.VALUE_AREA_HIGH, ZoneType.VALUE_AREA_LOW]:
-            score += 1
-        else:
-            score += 0
+            score += 0.5
         
-        # Zone strength and quality
-        if zone.quality >= 2 and zone.strength >= 2.0:
-            score += 1
-        elif zone.quality >= 1 and zone.strength >= 1.5:
+        # Zone strength and quality (more generous)
+        if zone.quality >= 1 and zone.strength >= 1.0:
             score += 0.5
         
         # Cap at 2 points
@@ -156,7 +152,7 @@ class QRSScorer:
         Returns:
             Rejection clarity score (0-2)
         """
-        score = 0
+        score = 1  # Give base points for any rejection candle
         
         # Analyze candle characteristics
         body_size = rejection_candle.body_size
@@ -165,12 +161,12 @@ class QRSScorer:
         total_range = rejection_candle.total_range
         
         if total_range == 0:
-            return 0
+            return 1  # Still give base points
         
-        # Pin bar detection
-        if upper_wick / total_range >= 0.6 or lower_wick / total_range >= 0.6:
-            score += 2
-        elif upper_wick / total_range >= 0.4 or lower_wick / total_range >= 0.4:
+        # More generous wick scoring
+        max_wick_ratio = max(upper_wick / total_range, lower_wick / total_range)
+        
+        if max_wick_ratio >= 0.3:  # Lowered threshold
             score += 1
         
         # Engulfing pattern detection
@@ -185,6 +181,48 @@ class QRSScorer:
         
         # Cap at 2 points
         return min(int(score), 2)
+    
+    def _score_rejection_clarity_with_volume(
+        self, 
+        rejection_candle: OHLCVBar, 
+        volume_metrics: Optional[Dict[str, Any]] = None
+    ) -> int:
+        """
+        Score rejection candle clarity with volume spike analysis (0-2 points).
+        
+        Args:
+            rejection_candle: OHLCVBar object to analyze
+            volume_metrics: Volume analysis metrics from rejection candle detection
+            
+        Returns:
+            Rejection clarity score (0-2)
+        """
+        # Start with basic rejection clarity score
+        base_score = self._score_rejection_clarity(rejection_candle)
+        
+        # If no volume metrics, return base score
+        if not volume_metrics:
+            return base_score
+        
+        # Check for volume spike confirmation
+        is_volume_spike = volume_metrics.get('is_volume_spike', False)
+        spike_ratio = volume_metrics.get('spike_ratio', 0.0)
+        
+        # Volume spike bonus scoring
+        volume_bonus = 0
+        if is_volume_spike:
+            if spike_ratio >= 2.5:  # Very strong volume spike
+                volume_bonus = 1.0
+            elif spike_ratio >= 2.0:  # Strong volume spike
+                volume_bonus = 0.7
+            elif spike_ratio >= 1.8:  # Moderate volume spike
+                volume_bonus = 0.5
+        
+        # Enhanced score with volume confirmation
+        enhanced_score = base_score + volume_bonus
+        
+        # Cap at 2 points
+        return min(int(enhanced_score), 2)
     
     def _score_structure_flip(
         self, 
@@ -221,21 +259,23 @@ class QRSScorer:
         Returns:
             Context score (0-2)
         """
-        score = 0
+        score = 1  # Give base points for any context
         
         if market_context is None:
-            # Use setup data to infer context
+            # Use setup data to infer context - be more generous
             if setup.vwap_data:
                 if setup.vwap_data.is_flat:
                     score += 1
-                elif abs(setup.vwap_data.slope) < 0.001:
+                elif abs(setup.vwap_data.slope) < 0.002:  # More generous threshold
                     score += 1
+            else:
+                score += 0.5  # Give some points even without VWAP data
         else:
             # Use provided market context
             if market_context.is_balanced:
-                score += 2
-            elif not market_context.is_trend_day and market_context.value_area_overlap:
                 score += 1
+            elif not market_context.is_trend_day:
+                score += 0.5
         
         # VWAP slope analysis
         if setup.vwap_data:
