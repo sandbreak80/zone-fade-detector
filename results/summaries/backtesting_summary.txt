@@ -1,0 +1,11 @@
+Zone Fade Detector - 2024 Backtesting Results
+==================================================
+
+Total Entry Points: 160
+Average QRS Score: 6.23
+Average Window Duration: 28.9 minutes
+
+Per-Symbol Results:
+  QQQ: 49 entry points
+  SPY: 33 entry points
+  IWM: 78 entry points

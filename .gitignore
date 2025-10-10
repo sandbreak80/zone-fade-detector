@@ -132,12 +132,12 @@ temp_*.py
 validation_output/
 /tmp/validation_output/
 
-# Results and validation data
-results/2024/efficient/
-results/2024/full/
-results/2024/december/
-results/manual_validation/entry_points/
-results/summaries/
+# Results and validation data (keep for publishing)
+# results/2024/efficient/ - PUBLISHED for validation
+# results/2024/full/ - PUBLISHED for validation  
+# results/2024/december/ - PUBLISHED for validation
+# results/manual_validation/entry_points/ - PUBLISHED for validation
+# results/summaries/ - PUBLISHED for validation
 
 # Test output
 test_output/
