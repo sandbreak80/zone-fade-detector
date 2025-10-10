@@ -217,8 +217,11 @@ For questions or issues:
 
 ## 📚 Documentation
 
-- [Setup Guide](SETUP_GUIDE.md)
-- [Docker Guide](README.Docker.md)
-- [Strategy Analysis](STRATEGY_ANALYSIS.md)
-- [Volume Spike Implementation](VOLUME_SPIKE_IMPLEMENTATION.md)
-- [Operational Analysis](OPERATIONAL_ANALYSIS.md)
+- [Setup Guide](docs/SETUP_GUIDE.md)
+- [Docker Guide](docs/README.Docker.md)
+- [Strategy Analysis](docs/STRATEGY_ANALYSIS.md)
+- [Volume Spike Implementation](docs/VOLUME_SPIKE_IMPLEMENTATION.md)
+- [Operational Analysis](docs/OPERATIONAL_ANALYSIS.md)
+- [Contributing Guidelines](docs/CONTRIBUTING.md)
+- [Changelog](docs/CHANGELOG.md)
+- [Backtesting Plan](docs/BACKTESTING_PLAN.md)
