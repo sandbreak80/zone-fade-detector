@@ -21,43 +21,43 @@ __email__ = "team@zonefadedetector.com"
 __license__ = "MIT"
 
 # Core modules
-from zone_fade_detector.core.detector import ZoneFadeDetector
-from zone_fade_detector.core.setup import ZoneFadeSetup
-
-# Data modules
-from zone_fade_detector.data.alpaca_client import AlpacaClient
-from zone_fade_detector.data.polygon_client import PolygonClient
-
-# Indicator modules
-from zone_fade_detector.indicators.vwap import VWAPCalculator
-from zone_fade_detector.indicators.swing_structure import SwingStructureDetector
-from zone_fade_detector.indicators.opening_range import OpeningRangeCalculator
-
-# Strategy modules
-from zone_fade_detector.strategies.zone_fade_strategy import ZoneFadeStrategy
-from zone_fade_detector.strategies.qrs_scorer import QRSScorer
+from zone_fade_detector.core.models import (
+    OHLCVBar,
+    Zone,
+    ZoneType,
+    SetupDirection,
+    CandleType,
+    VWAPData,
+    OpeningRange,
+    SwingPoint,
+    SwingStructure,
+    VolumeAnalysis,
+    QRSFactors,
+    ZoneFadeSetup,
+    MarketContext,
+    Alert,
+)
 
 # Utility modules
 from zone_fade_detector.utils.config import load_config
 from zone_fade_detector.utils.logging import setup_logging
 
 __all__ = [
-    # Core
-    "ZoneFadeDetector",
+    # Core Models
+    "OHLCVBar",
+    "Zone",
+    "ZoneType",
+    "SetupDirection",
+    "CandleType",
+    "VWAPData",
+    "OpeningRange",
+    "SwingPoint",
+    "SwingStructure",
+    "VolumeAnalysis",
+    "QRSFactors",
     "ZoneFadeSetup",
-    
-    # Data
-    "AlpacaClient",
-    "PolygonClient",
-    
-    # Indicators
-    "VWAPCalculator",
-    "SwingStructureDetector",
-    "OpeningRangeCalculator",
-    
-    # Strategies
-    "ZoneFadeStrategy",
-    "QRSScorer",
+    "MarketContext",
+    "Alert",
     
     # Utils
     "load_config",
