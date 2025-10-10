@@ -13,6 +13,7 @@ import signal
 import sys
 
 from zone_fade_detector.core.models import OHLCVBar, Alert
+from zone_fade_detector.core.rolling_window_manager import RollingWindowManager, WindowType
 from zone_fade_detector.data import DataManager, DataManagerConfig, AlpacaConfig, PolygonConfig
 from zone_fade_detector.strategies import SignalProcessor, SignalProcessorConfig
 from zone_fade_detector.utils.logging import setup_logging
@@ -40,6 +41,9 @@ class ZoneFadeDetector:
         
         # Initialize data manager
         self.data_manager = self._create_data_manager()
+        
+        # Initialize rolling window manager
+        self.window_manager = self._create_window_manager()
         
         # Initialize signal processor
         self.signal_processor = self._create_signal_processor()
@@ -89,6 +93,16 @@ class ZoneFadeDetector:
         )
         
         return DataManager(data_config)
+    
+    def _create_window_manager(self) -> RollingWindowManager:
+        """Create rolling window manager from configuration."""
+        evaluation_cadence = self.config.get('polling', {}).get('interval_seconds', 30)
+        memory_limit = self.config.get('performance', {}).get('memory_limit_mb', 500)
+        
+        return RollingWindowManager(
+            evaluation_cadence_seconds=evaluation_cadence,
+            memory_limit_mb=memory_limit
+        )
     
     def _create_signal_processor(self) -> SignalProcessor:
         """Create signal processor from configuration."""
@@ -142,6 +156,10 @@ class ZoneFadeDetector:
             self.logger.warning("⚠️ No data available for detection")
             return
         
+        # Update rolling windows with new data
+        self.logger.info("🪟 Updating rolling windows with new data...")
+        await self._update_rolling_windows(symbol_data)
+        
         # Log data summary
         for symbol, bars in symbol_data.items():
             self.logger.info(f"📈 {symbol}: {len(bars)} bars available")
@@ -149,9 +167,9 @@ class ZoneFadeDetector:
                 latest_bar = bars[-1]
                 self.logger.info(f"   Latest: {latest_bar.timestamp} - O:{latest_bar.open:.2f} H:{latest_bar.high:.2f} L:{latest_bar.low:.2f} C:{latest_bar.close:.2f} V:{latest_bar.volume}")
         
-        # Process signals
+        # Process signals using rolling window data
         self.logger.info("🎯 Processing signals through Zone Fade strategy...")
-        alerts = self.signal_processor.process_signals(symbol_data)
+        alerts = await self._process_signals_with_windows(symbol_data)
         
         # Log signal processing results
         if alerts:
@@ -295,6 +313,68 @@ class ZoneFadeDetector:
             health_status['overall'] = False
         
         return health_status
+    
+    async def _update_rolling_windows(self, symbol_data: Dict[str, List[OHLCVBar]]) -> None:
+        """Update rolling windows with new data."""
+        for symbol, bars in symbol_data.items():
+            for bar in bars:
+                # Add to different window types
+                self.window_manager.add_bar(WindowType.VWAP_COMPUTATION, bar, symbol)
+                self.window_manager.add_bar(WindowType.SESSION_CONTEXT, bar, symbol)
+                self.window_manager.add_bar(WindowType.SWING_CHOCH, bar, symbol)
+                self.window_manager.add_bar(WindowType.INITIATIVE_ANALYSIS, bar, symbol)
+                self.window_manager.add_bar(WindowType.INTERMARKET, bar, symbol)
+                self.window_manager.add_bar(WindowType.QRS_ACCUMULATOR, bar, symbol)
+                
+                # Add to opening range if within first 30 minutes of session
+                if self._is_within_opening_range(bar.timestamp):
+                    self.window_manager.add_bar(WindowType.OPENING_RANGE, bar, symbol)
+                
+                # Add to HTF zones if it's a significant bar
+                if self._is_significant_for_htf(bar):
+                    self.window_manager.add_bar(WindowType.HTF_ZONES, bar, symbol)
+    
+    async def _process_signals_with_windows(self, symbol_data: Dict[str, List[OHLCVBar]]) -> List[Alert]:
+        """Process signals using rolling window data."""
+        # Get window data for each symbol
+        window_data = {}
+        
+        for symbol in symbol_data.keys():
+            window_data[symbol] = {
+                'vwap': self.window_manager.get_window_bars(WindowType.VWAP_COMPUTATION, symbol),
+                'session_context': self.window_manager.get_window_bars(WindowType.SESSION_CONTEXT, symbol),
+                'opening_range': self.window_manager.get_window_bars(WindowType.OPENING_RANGE, symbol),
+                'swing_choch': self.window_manager.get_window_bars(WindowType.SWING_CHOCH, symbol),
+                'initiative': self.window_manager.get_window_bars(WindowType.INITIATIVE_ANALYSIS, symbol),
+                'intermarket': self.window_manager.get_window_bars(WindowType.INTERMARKET, symbol),
+                'qrs_accumulator': self.window_manager.get_window_bars(WindowType.QRS_ACCUMULATOR, symbol),
+                'htf_zones': self.window_manager.get_window_bars(WindowType.HTF_ZONES, symbol)
+            }
+        
+        # Process signals with window data
+        return self.signal_processor.process_signals(symbol_data, window_data)
+    
+    def _is_within_opening_range(self, timestamp: datetime) -> bool:
+        """Check if timestamp is within opening range (first 30 minutes of RTH)."""
+        # RTH starts at 9:30 AM ET
+        rth_start = timestamp.replace(hour=9, minute=30, second=0, microsecond=0)
+        opening_range_end = rth_start + timedelta(minutes=30)
+        
+        return rth_start <= timestamp <= opening_range_end
+    
+    def _is_significant_for_htf(self, bar: OHLCVBar) -> bool:
+        """Check if bar is significant for HTF zone analysis."""
+        # Check for significant price movement or volume
+        price_range = bar.high - bar.low
+        avg_price = (bar.high + bar.low) / 2
+        price_change_pct = price_range / avg_price if avg_price > 0 else 0
+        
+        # Consider significant if price change > 0.5% or high volume
+        return price_change_pct > 0.005 or bar.volume > 100000
+    
+    def get_window_performance_stats(self) -> Dict[str, Any]:
+        """Get rolling window performance statistics."""
+        return self.window_manager.get_performance_stats()
     
     def get_recent_setups(self, symbol: Optional[str] = None, limit: int = 10) -> List[Dict[str, Any]]:
         """Get recent setups."""
