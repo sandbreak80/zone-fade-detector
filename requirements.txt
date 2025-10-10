@@ -1,0 +1,48 @@
+# Zone Fade Detector - Production Dependencies
+# Core dependencies for the trading system
+
+# API Clients
+alpaca-py==0.20.0
+polygon-api-client==1.12.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.24.4
+
+# HTTP and Networking
+requests==2.31.0
+httpx==0.25.2
+aiohttp==3.9.1
+
+# Configuration and Environment
+pydantic==2.5.2
+python-dotenv==1.0.0
+pyyaml==6.0.1
+
+# Logging and Monitoring
+structlog==23.2.0
+colorama==0.4.6
+
+# Date and Time
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Data Validation
+marshmallow==3.20.2
+
+# Caching
+diskcache==5.6.3
+
+# Utilities
+click==8.1.7
+rich==13.7.0
+
+# Development and Testing (optional for production)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+mypy==1.7.1

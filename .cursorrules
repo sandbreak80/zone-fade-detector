@@ -1,0 +1,143 @@
+# Zone Fade Detector - Cursor Rules
+
+## Project Overview
+This is a Python 3.11+ project for detecting Zone Fade trading setups using 15-minute delayed Alpaca and Polygon REST data. The project treats delayed data as real-time and uses no websockets.
+
+## Code Style & Standards
+
+### Python Version & Environment
+- Use Python 3.11+ features and syntax
+- Always use type hints for function parameters and return values
+- Use dataclasses or Pydantic models for data structures
+- Prefer f-strings over .format() or % formatting
+- Use pathlib.Path instead of os.path for file operations
+
+### Code Organization
+- Follow the existing package structure: core/, data/, indicators/, strategies/, utils/
+- Use absolute imports from the package root
+- Keep functions focused and single-purpose
+- Use descriptive variable and function names
+- Add comprehensive docstrings for all public functions and classes
+
+### Error Handling
+- Use specific exception types, not bare except clauses
+- Log errors with appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+- Handle API rate limits and network errors gracefully
+- Use context managers for resource management
+
+### Testing
+- Write unit tests for all core logic
+- Use pytest as the testing framework
+- Aim for >90% code coverage
+- Mock external API calls in unit tests
+- Use fixtures for common test data
+
+### Data Handling
+- Use pandas DataFrames for OHLCV data with proper datetime indexing
+- Validate data integrity before processing
+- Handle missing data explicitly
+- Use numpy for mathematical calculations
+
+### API Integration
+- Implement proper rate limiting for REST API calls
+- Use retry logic with exponential backoff
+- Cache API responses when appropriate
+- Handle authentication errors gracefully
+
+### Configuration
+- Use environment variables for sensitive data (API keys)
+- Create configuration classes for non-sensitive settings
+- Validate configuration on startup
+- Support different environments (dev, test, prod)
+
+### Logging
+- Use structured logging with consistent format
+- Log at appropriate levels
+- Include relevant context in log messages
+- Use log rotation for production
+
+### Performance
+- Use async/await for I/O operations when beneficial
+- Cache expensive calculations
+- Use vectorized operations with pandas/numpy
+- Profile code for bottlenecks
+
+### Security
+- Never commit API keys or sensitive data
+- Use environment variables for secrets
+- Validate all input data
+- Use HTTPS for all API calls
+
+### Documentation
+- Write clear, concise docstrings
+- Include examples in docstrings where helpful
+- Keep README.md updated
+- Document API rate limits and usage patterns
+
+## Project-Specific Rules
+
+### Trading Logic
+- Implement Zone Fade criteria exactly as specified
+- Use clear, descriptive names for trading concepts
+- Separate signal detection from execution logic
+- Validate all trading signals before recording
+
+### Data Sources
+- Use only Alpaca and Polygon REST APIs
+- Handle 15-minute delayed data appropriately
+- Implement proper data validation
+- Cache historical data when possible
+
+### Indicators
+- Implement VWAP, Opening Range, and swing structure detection
+- Use efficient algorithms for indicator calculations
+- Validate indicator values before use
+- Document calculation methods
+
+### Quality Rating System (QRS)
+- Implement the 5-factor scoring system exactly as specified
+- Use clear thresholds for A-Setup classification
+- Log scoring details for debugging
+- Validate all scoring inputs
+
+## File Naming Conventions
+- Use snake_case for all Python files
+- Use descriptive names that indicate purpose
+- Group related functionality in modules
+- Use __init__.py files to expose public APIs
+
+## Import Organization
+1. Standard library imports
+2. Third-party imports (alpaca-py, polygon, pandas, numpy)
+3. Local package imports
+4. Separate groups with blank lines
+
+## Comments & Documentation
+- Write self-documenting code
+- Add comments for complex trading logic
+- Document any deviations from standard practices
+- Include TODO comments for future improvements
+
+## Git Workflow
+- Use meaningful commit messages
+- Create feature branches for new functionality
+- Write descriptive pull request descriptions
+- Keep commits focused and atomic
+
+## Dependencies
+- Pin all dependency versions
+- Use requirements.txt for exact versions
+- Separate dev dependencies in requirements-dev.txt
+- Regularly update dependencies for security
+
+## Performance Considerations
+- Optimize for 30-second polling intervals
+- Use efficient data structures
+- Minimize memory usage
+- Cache frequently accessed data
+
+## Error Recovery
+- Implement graceful degradation
+- Log all errors with context
+- Provide meaningful error messages
+- Support manual intervention when needed

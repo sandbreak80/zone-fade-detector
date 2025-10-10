@@ -1,0 +1,200 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zone-fade-detector"
+version = "0.1.0"
+description = "A Python-based trading system that identifies Zone Fade reversal setups using delayed market data"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "Zone Fade Detector Team", email = "team@zonefadedetector.com"},
+]
+keywords = ["trading", "finance", "technical-analysis", "alpaca", "polygon", "zone-fade"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+
+dependencies = [
+    "alpaca-py>=0.20.0",
+    "polygon-api-client>=1.12.0",
+    "pandas>=2.1.4",
+    "numpy>=1.24.4",
+    "requests>=2.31.0",
+    "httpx>=0.25.2",
+    "aiohttp>=3.9.1",
+    "pydantic>=2.5.2",
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.1",
+    "structlog>=23.2.0",
+    "colorama>=0.4.6",
+    "python-dateutil>=2.8.2",
+    "pytz>=2023.3",
+    "marshmallow>=3.20.2",
+    "diskcache>=5.6.3",
+    "click>=8.1.7",
+    "rich>=13.7.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.3",
+    "pytest-asyncio>=0.21.1",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+    "pytest-xdist>=3.5.0",
+    "black>=23.11.0",
+    "isort>=5.12.0",
+    "flake8>=6.1.0",
+    "mypy>=1.7.1",
+    "pre-commit>=3.6.0",
+    "sphinx>=7.2.6",
+    "sphinx-rtd-theme>=1.3.0",
+    "myst-parser>=2.0.0",
+    "ipython>=8.18.1",
+    "jupyter>=1.0.0",
+    "notebook>=7.0.6",
+    "memory-profiler>=0.61.0",
+    "line-profiler>=4.1.2",
+    "types-requests>=2.31.0.10",
+    "types-PyYAML>=6.0.12.12",
+    "types-python-dateutil>=2.8.19.14",
+    "factory-boy>=3.3.0",
+    "faker>=20.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/zone-fade-detector/zone-fade-detector"
+Documentation = "https://zone-fade-detector.readthedocs.io"
+Repository = "https://github.com/zone-fade-detector/zone-fade-detector.git"
+Issues = "https://github.com/zone-fade-detector/zone-fade-detector/issues"
+
+[project.scripts]
+zone-fade-detector = "zone_fade_detector.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_first_party = ["zone_fade_detector"]
+known_third_party = ["alpaca", "polygon", "pandas", "numpy", "requests"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "alpaca.*",
+    "polygon.*",
+    "pandas.*",
+    "numpy.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "--verbose",
+    "--tb=short",
+    "--cov=zone_fade_detector",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow running tests",
+    "api: Tests that require API access",
+]
+
+[tool.coverage.run]
+source = ["src/zone_fade_detector"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/migrations/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = ["E203", "W503", "E501"]
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    ".venv",
+    ".eggs",
+    "*.egg",
+]
+per-file-ignores = [
+    "__init__.py:F401",
+    "tests/*:S101",
+]
