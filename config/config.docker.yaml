@@ -1,5 +1,6 @@
-# Zone Fade Detector - Configuration Example
-# Copy this file to config.yaml and customize as needed
+# Zone Fade Detector - Docker Configuration
+# Docker-optimized configuration file
+# Copy this to config.yaml and customize as needed
 
 # Symbol Configuration
 symbols:
@@ -84,8 +85,8 @@ alerts:
   channels:
     - console
     - file
-    - webhook
     # - email
+    # - webhook
   
   min_qrs_score: 7              # Minimum QRS score to generate alert
   deduplication_minutes: 5      # Minutes to wait before duplicate alerts
@@ -98,14 +99,14 @@ alerts:
   
   file:
     enabled: true
-    log_file: logs/alerts.log
+    log_file: /app/logs/alerts.log
     max_file_size: 10485760     # 10MB
     backup_count: 5
   
   email:
     enabled: false
-    smtp_server: smtp.gmail.com
-    smtp_port: 587
+    smtp_server: ${ALERT_EMAIL_SMTP_SERVER}
+    smtp_port: ${ALERT_EMAIL_PORT}
     username: ${ALERT_EMAIL_USERNAME}
     password: ${ALERT_EMAIL_PASSWORD}
     from_address: ${ALERT_EMAIL_FROM}
@@ -113,21 +114,21 @@ alerts:
       - ${ALERT_EMAIL_TO}
   
   webhook:
-    enabled: true
-    url: ${DISCORD_WEBHOOK_URL}
-    secret: ""
+    enabled: false
+    url: ${WEBHOOK_URL}
+    secret: ${WEBHOOK_SECRET}
     timeout: 5
 
-# Logging Configuration
+# Logging Configuration (Docker-optimized)
 logging:
-  level: INFO
+  level: ${LOG_LEVEL}
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  file: logs/zone_fade_detector.log
+  file: /app/logs/zone_fade_detector.log
   max_file_size: 10485760       # 10MB
   backup_count: 5
   console_output: true
 
-# Performance Configuration
+# Performance Configuration (Docker-optimized)
 performance:
   max_concurrent_requests: 5
   request_timeout: 10
@@ -135,13 +136,13 @@ performance:
   retry_delay: 1.0              # Initial delay in seconds
   retry_backoff: 2.0            # Exponential backoff multiplier
   
-  # Memory management
-  max_cached_bars: 10000        # Maximum bars to keep in memory
+  # Memory management (optimized for Docker)
+  max_cached_bars: 5000         # Reduced for container memory limits
   cache_cleanup_interval: 300   # Seconds between cache cleanups
   
   # Data processing
   batch_processing: true
-  batch_size: 1000
+  batch_size: 500               # Reduced batch size for container
   processing_timeout: 30
 
 # Market Hours Configuration
@@ -168,15 +169,47 @@ risk_management:
   stop_loss_percentage: 0.02    # 2% stop loss
   take_profit_percentage: 0.04  # 4% take profit
 
-# Development Configuration
+# Development Configuration (Docker-optimized)
 development:
   debug_mode: false
   mock_data: false
   test_mode: false
   verbose_logging: false
+  dry_run: false
   
   # Test data configuration
   test_data:
     start_date: "2024-01-01"
     end_date: "2024-01-31"
     symbols: ["SPY", "QQQ", "IWM"]
+
+# Docker-specific configuration
+docker:
+  # Container health check settings
+  health_check:
+    enabled: true
+    interval: 30
+    timeout: 10
+    retries: 3
+    start_period: 40
+  
+  # Volume mount paths
+  volumes:
+    logs: /app/logs
+    signals: /app/signals
+    data: /app/data
+    config: /app/config
+  
+  # Resource limits
+  resources:
+    memory_limit: "1G"
+    cpu_limit: "1.0"
+    memory_reservation: "512M"
+    cpu_reservation: "0.5"
+  
+  # Logging driver configuration
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"

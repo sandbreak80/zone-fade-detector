@@ -1,0 +1,178 @@
+# Zone Fade Detector - Docker Makefile
+# Convenient commands for Docker operations
+
+.PHONY: help build up down logs shell test clean dev prod
+
+# Default target
+help:
+	@echo "Zone Fade Detector - Docker Commands"
+	@echo ""
+	@echo "Setup:"
+	@echo "  setup          - Initial setup (copy config files)"
+	@echo "  build          - Build Docker images"
+	@echo ""
+	@echo "Running:"
+	@echo "  up             - Start in standard mode"
+	@echo "  dev            - Start in development mode"
+	@echo "  live           - Start in live mode"
+	@echo "  replay         - Start in replay mode (requires START and END dates)"
+	@echo "  test-alerts    - Test alert channels"
+	@echo ""
+	@echo "Management:"
+	@echo "  down           - Stop containers"
+	@echo "  logs           - View logs"
+	@echo "  shell          - Open shell in container"
+	@echo "  test           - Run tests"
+	@echo "  clean          - Clean up containers and images"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make setup"
+	@echo "  make build"
+	@echo "  make up"
+	@echo "  make replay START=2024-01-01 END=2024-01-31"
+	@echo "  make logs"
+
+# Setup configuration files
+setup:
+	@echo "Setting up Docker configuration..."
+	@if [ ! -f .env ]; then \
+		cp .env.docker .env; \
+		echo "Created .env from template. Please edit with your API credentials."; \
+	else \
+		echo ".env already exists, skipping..."; \
+	fi
+	@if [ ! -f config/config.yaml ]; then \
+		cp config/config.docker.yaml config/config.yaml; \
+		echo "Created config/config.yaml from template."; \
+	else \
+		echo "config/config.yaml already exists, skipping..."; \
+	fi
+	@mkdir -p logs signals data
+	@echo "Setup complete!"
+
+# Build Docker images
+build:
+	@echo "Building Docker images..."
+	docker compose build
+
+# Start in standard mode
+up:
+	@echo "Starting Zone Fade Detector in standard mode..."
+	docker compose up zone-fade-detector
+
+# Start in development mode
+dev:
+	@echo "Starting Zone Fade Detector in development mode..."
+	docker compose up zone-fade-detector-dev
+
+# Start in live mode
+live:
+	@echo "Starting Zone Fade Detector in live mode..."
+	docker compose run --rm zone-fade-detector --mode live --verbose
+
+# Start in replay mode
+replay:
+	@if [ -z "$(START)" ] || [ -z "$(END)" ]; then \
+		echo "Error: START and END dates required"; \
+		echo "Usage: make replay START=2024-01-01 END=2024-01-31"; \
+		exit 1; \
+	fi
+	@echo "Starting Zone Fade Detector in replay mode..."
+	docker compose run --rm zone-fade-detector \
+		--mode replay \
+		--start-date $(START) \
+		--end-date $(END) \
+		--provider alpaca
+
+# Test alert channels
+test-alerts:
+	@echo "Testing alert channels..."
+	docker compose run --rm zone-fade-detector --test-alerts
+
+# Stop containers
+down:
+	@echo "Stopping containers..."
+	docker compose down
+
+# View logs
+logs:
+	@echo "Viewing logs..."
+	docker compose logs -f zone-fade-detector
+
+# Open shell in container
+shell:
+	@echo "Opening shell in container..."
+	docker compose exec zone-fade-detector bash
+
+# Run tests
+test:
+	@echo "Running tests..."
+	docker compose run --rm zone-fade-detector-test
+
+# Clean up
+clean:
+	@echo "Cleaning up..."
+	docker compose down --volumes --remove-orphans
+	docker system prune -f
+
+# Production deployment
+prod:
+	@echo "Starting production deployment..."
+	docker compose -f docker compose.yml -f docker compose.prod.yml up -d
+
+# Check status
+status:
+	@echo "Container status:"
+	docker compose ps
+
+# View resource usage
+stats:
+	@echo "Resource usage:"
+	docker stats zone-fade-detector
+
+# Backup data
+backup:
+	@echo "Creating backup..."
+	@mkdir -p backups
+	tar -czf backups/config-$(shell date +%Y%m%d-%H%M%S).tar.gz config/
+	tar -czf backups/logs-$(shell date +%Y%m%d-%H%M%S).tar.gz logs/
+	tar -czf backups/signals-$(shell date +%Y%m%d-%H%M%S).tar.gz signals/
+	@echo "Backup created in backups/ directory"
+
+# Restore data
+restore:
+	@if [ -z "$(BACKUP)" ]; then \
+		echo "Error: BACKUP file required"; \
+		echo "Usage: make restore BACKUP=backups/config-20240101-120000.tar.gz"; \
+		exit 1; \
+	fi
+	@echo "Restoring from $(BACKUP)..."
+	tar -xzf $(BACKUP)
+	@echo "Restore complete"
+
+# Update and restart
+update:
+	@echo "Updating and restarting..."
+	git pull
+	docker compose build --no-cache
+	docker compose down
+	docker compose up -d
+	@echo "Update complete"
+
+# Health check
+health:
+	@echo "Checking container health..."
+	docker compose ps
+	@echo ""
+	@echo "Health check details:"
+	docker inspect zone-fade-detector | jq '.[0].State.Health' 2>/dev/null || echo "Health check not available"
+
+# Show configuration
+config:
+	@echo "Docker Compose configuration:"
+	docker compose config
+
+# Show environment variables
+env:
+	@echo "Environment variables:"
+	docker compose exec zone-fade-detector env | grep -E "(ALPACA|POLYGON|LOG_LEVEL)" | sort

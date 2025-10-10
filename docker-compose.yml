@@ -1,0 +1,160 @@
+# Zone Fade Detector - Docker Compose Configuration
+# Easy container management and orchestration
+
+services:
+  zone-fade-detector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: zone-fade-detector
+    restart: unless-stopped
+    
+    # Environment variables
+    env_file:
+      - .env
+    
+    # Volume mounts for persistent data
+    volumes:
+      # Configuration files
+      - ./config:/app/config:ro
+      - ./.env:/app/.env:ro
+      
+      # Logs directory (with proper permissions)
+      - ./logs:/app/logs:Z
+      
+      # Signals output directory (with proper permissions)
+      - ./signals:/app/signals:Z
+      
+      # Data cache directory (with proper permissions)
+      - ./data:/app/data:Z
+    
+    # Port mapping (for future web interface)
+    ports:
+      - "8000:8000"
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import zone_fade_detector; print('Health check passed')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Command override (can be customized)
+    command: ["python", "-m", "zone_fade_detector.main"]
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Development service with hot reload
+  zone-fade-detector-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: zone-fade-detector-dev
+    restart: "no"
+    
+    # Environment variables
+    env_file:
+      - .env
+    
+    # Volume mounts for development
+    volumes:
+      # Source code for hot reload
+      - ./src:/app/src:Z
+      - ./tests:/app/tests:Z
+      - ./scripts:/app/scripts:Z
+      
+      # Configuration files
+      - ./config:/app/config:ro
+      - ./.env:/app/.env:ro
+      
+      # Logs directory
+      - ./logs:/app/logs:Z
+      
+      # Signals output directory
+      - ./signals:/app/signals:Z
+      
+      # Development tools
+      - ./Makefile:/app/Makefile:ro
+      - ./pyproject.toml:/app/pyproject.toml:ro
+      - ./requirements-dev.txt:/app/requirements-dev.txt:ro
+    
+    # Install development dependencies
+    command: >
+      sh -c "
+        pip install -r requirements-dev.txt &&
+        python -m zone_fade_detector.main --verbose
+      "
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Test service for running tests
+  zone-fade-detector-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: zone-fade-detector-test
+    restart: "no"
+    
+    # Environment variables
+    env_file:
+      - .env
+    
+    # Volume mounts
+    volumes:
+      - ./src:/app/src:Z
+      - ./tests:/app/tests:Z
+      - ./config:/app/config:ro
+      - ./.env:/app/.env:ro
+      - ./logs:/app/logs:Z
+    
+    # Install development dependencies and run tests
+    command: >
+      sh -c "
+        pip install -r requirements-dev.txt &&
+        pytest tests/ -v --cov=zone_fade_detector --cov-report=html --cov-report=term-missing
+      "
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Named volumes for persistent data
+volumes:
+  zone_fade_logs:
+    driver: local
+  zone_fade_signals:
+    driver: local
+  zone_fade_data:
+    driver: local
+
+# Networks
+networks:
+  default:
+    name: zone-fade-network

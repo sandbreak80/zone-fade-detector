@@ -20,6 +20,7 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -49,7 +50,6 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
-cover/
 
 # Translations
 *.mo
@@ -72,7 +72,6 @@ instance/
 docs/_build/
 
 # PyBuilder
-.pybuilder/
 target/
 
 # Jupyter Notebook
@@ -83,9 +82,7 @@ profile_default/
 ipython_config.py
 
 # pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
+.python-version
 
 # pipenv
 #   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
@@ -94,22 +91,7 @@ ipython_config.py
 #   install all needed dependencies.
 #Pipfile.lock
 
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/#use-with-ide
-.pdm.toml
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
 # Celery stuff
@@ -146,65 +128,45 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be added to the global gitignore or merged into this project gitignore.  For a PyCharm
-#  project, it is recommended to include the following files:
-#  .idea/
-#  *.iml
-#  *.ipr
-#  *.iws
-.idea/
-
-# VS Code
-.vscode/
-
 # Zone Fade Detector specific
 # Configuration files with sensitive data
-config/secrets.yaml
-config/production.yaml
+config/config.yaml
+config/config.production.yaml
+config/config.local.yaml
+
+# Environment variables
+.env
 .env.local
 .env.production
-
-# Data files
-data/
-*.csv
-*.json
-*.parquet
-*.h5
-*.hdf5
-
-# Cache files
-cache/
-.cache/
-*.cache
+.env.development
 
 # Log files
 logs/
 *.log
 
+# Data files
+data/
+signals/
+*.csv
+*.json
+*.jsonl
+
 # API keys and secrets
-api_keys.txt
-secrets.txt
-credentials.json
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
 
-# Trading data
-trading_data/
-backtest_results/
-performance_reports/
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Temporary files
-temp/
-tmp/
-*.tmp
-
-# OS specific
+# OS files
 .DS_Store
 .DS_Store?
 ._*
@@ -213,22 +175,31 @@ tmp/
 ehthumbs.db
 Thumbs.db
 
+# Docker
+.dockerignore
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
 # Backup files
 *.bak
 *.backup
 *.old
 
-# IDE specific
-*.swp
-*.swo
-*~
+# Database files
+*.db
+*.sqlite
+*.sqlite3
 
-# Documentation builds
-docs/build/
-docs/_build/
+# Cache directories
+.cache/
+cache/
 
 # Test outputs
-test_outputs/
+test_output/
 test_results/
 
 # Coverage reports
@@ -243,16 +214,21 @@ coverage.xml
 # Jupyter notebook checkpoints
 .ipynb_checkpoints/
 
-# Virtual environment
-venv/
-env/
-ENV/
+# pytest
+.pytest_cache/
 
-# Package files
-*.egg-info/
-dist/
-build/
+# Coverage
+.coverage
+htmlcov/
+
+# Documentation builds
+docs/_build/
+docs/build/
+
+# Sphinx
+docs/_static/
+docs/_templates/
 
 # Local development
-local_config.py
-dev_settings.py
+local/
+dev/
