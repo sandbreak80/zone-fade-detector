@@ -1,5 +1,9 @@
 # Zone Fade Detector - Production Dependencies
 # Core dependencies for the trading system
+# 
+# ⚠️  IMPORTANT: These dependencies are installed INSIDE Docker containers only.
+# DO NOT run 'pip install -r requirements.txt' on your host system.
+# Use 'docker-compose build' to install dependencies in containers.
 
 # API Clients
 alpaca-py==0.20.0

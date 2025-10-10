@@ -1,5 +1,9 @@
 # Zone Fade Detector - Development Dependencies
 # Additional packages for development, testing, and code quality
+#
+# ⚠️  IMPORTANT: These dependencies are installed INSIDE Docker containers only.
+# DO NOT run 'pip install -r requirements-dev.txt' on your host system.
+# Use 'docker-compose run --rm zone-fade-detector-test' for testing.
 
 # Include production requirements
 -r requirements.txt

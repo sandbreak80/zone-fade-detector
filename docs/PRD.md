@@ -22,10 +22,11 @@ The Zone Fade Detector is a Python-based trading system that identifies high-pro
 
 ### 2.1 System Architecture
 - **Language**: Python 3.11+
-- **Environment**: Virtual environment (venv)
+- **Environment**: Docker containers exclusively (NO local Python installation)
 - **Architecture**: Modular, event-driven design
 - **Data Flow**: REST API polling → Data processing → Signal detection → Alert generation
-- **Deployment**: Local/cloud deployment with configuration management
+- **Deployment**: Docker-based deployment with configuration management
+- **⚠️ CRITICAL**: Local Python installation is NOT supported and will cause issues
 
 ### 2.2 Data Sources
 | Source | Library | Data Type | Frequency | Delay |
@@ -291,17 +292,20 @@ alerts:
 ## 10. Deployment Requirements
 
 ### 10.1 Development Environment
-- Python 3.11+ with venv
-- All dependencies from requirements.txt
-- API keys in environment variables
-- Local configuration file
+- **Docker Engine 20.10+** (NO local Python installation)
+- **Docker Compose 2.0+** for container orchestration
+- All dependencies managed inside Docker containers
+- API keys in environment variables (.env file)
+- Configuration files mounted as volumes
+- **⚠️ CRITICAL**: Do NOT install Python, pip, or virtual environments locally
 
 ### 10.2 Production Environment
-- Linux server with Python 3.11+
-- Process management (systemd or supervisor)
-- Log rotation and monitoring
-- Backup and recovery procedures
-- Health check endpoints
+- **Docker-based deployment** (NO local Python installation)
+- **Docker Compose** for container management
+- Container health checks and monitoring
+- Volume mounts for persistent data
+- Log rotation and monitoring via Docker
+- **⚠️ CRITICAL**: All Python execution happens inside Docker containers
 
 ## 11. Monitoring and Alerting
 

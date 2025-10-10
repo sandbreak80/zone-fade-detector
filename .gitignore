@@ -101,6 +101,13 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Virtual environments (Docker-only project)
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
 # Environments
 .env
 .env.local
@@ -126,12 +133,12 @@ dmypy.json
 .pyre/
 
 # Zone Fade Detector specific
-# Configuration files with sensitive data
+# Configuration files with sensitive data (PERSISTENT - DO NOT OVERWRITE)
 config/config.yaml
 config/config.production.yaml
 config/config.local.yaml
 
-# Environment variables
+# Environment variables (PERSISTENT - DO NOT OVERWRITE)
 .env
 .env.local
 .env.production

@@ -2,6 +2,22 @@
 
 This document provides comprehensive instructions for running the Zone Fade Detector in Docker containers.
 
+## ⚠️ CRITICAL: Docker-Only Development
+
+**This project is designed to run exclusively in Docker containers. Local Python installation is NOT supported and will cause issues.**
+
+### 🚫 What NOT to do:
+- ❌ Do NOT install Python, pip, or virtual environments on your host system
+- ❌ Do NOT run `pip install` commands outside of Docker containers
+- ❌ Do NOT create local virtual environments
+- ❌ Do NOT run Python scripts directly on your host system
+
+### ✅ What TO do:
+- ✅ Use `docker-compose` commands for all operations
+- ✅ All Python dependencies are managed inside Docker containers
+- ✅ Development happens inside Docker containers with volume mounts
+- ✅ Testing is done using Docker test containers
+
 ## 🐳 Quick Start
 
 ### Prerequisites
@@ -324,6 +340,29 @@ healthcheck:
 ## 🐛 Troubleshooting
 
 ### Common Issues
+
+**❌ "Python not found" or "pip install" errors on host system:**
+- This is expected! The project uses Docker exclusively
+- Do NOT install Python or pip on your host system
+- Use Docker commands instead:
+  ```bash
+  # Instead of: pip install package
+  docker-compose exec zone-fade-detector pip install package
+  
+  # Instead of: python script.py
+  docker-compose run --rm zone-fade-detector python script.py
+  ```
+
+**❌ "Module not found" errors:**
+- All Python modules are installed inside Docker containers
+- Use Docker commands to run Python code:
+  ```bash
+  # Test imports
+  docker-compose run --rm zone-fade-detector python -c "import zone_fade_detector"
+  
+  # Run tests
+  docker-compose run --rm zone-fade-detector-test
+  ```
 
 **Container won't start:**
 ```bash

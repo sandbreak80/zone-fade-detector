@@ -29,6 +29,15 @@ zone-fade-detector/
 
 ## 🚀 Quick Start
 
+### ⚠️ IMPORTANT: Docker-Only Setup
+
+**This project uses Docker exclusively. DO NOT install Python, pip, or create virtual environments locally.**
+
+- ❌ **DO NOT** run `pip install` or `python -m venv` on your host system
+- ❌ **DO NOT** install Python packages globally or in local virtual environments
+- ✅ **ONLY** use Docker containers for all development and execution
+- ✅ All Python dependencies are managed within Docker containers
+
 ### Prerequisites
 
 - Docker Engine 20.10+
@@ -313,6 +322,37 @@ This software is for educational and research purposes only. Trading involves su
 - **Issues**: Report bugs and request features via GitHub Issues
 - **Documentation**: Check the docs/ directory for detailed guides
 - **Discussions**: Use GitHub Discussions for questions and community support
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**❌ "Python not found" or "pip install" errors:**
+- This project uses Docker exclusively
+- Do NOT install Python or pip on your host system
+- Use `docker-compose` commands instead of direct Python commands
+
+**❌ "Module not found" errors:**
+- All dependencies are installed inside Docker containers
+- Use `docker-compose run --rm zone-fade-detector python -c "import module"`
+- Check that you're running commands inside Docker containers
+
+**❌ Permission errors:**
+- Ensure Docker has proper permissions
+- Use `docker-compose` commands instead of direct Docker commands
+- Check volume mount permissions in docker-compose.yml
+
+**✅ Correct way to run commands:**
+```bash
+# Instead of: python -m zone_fade_detector.main
+docker-compose run --rm zone-fade-detector
+
+# Instead of: pip install package
+docker-compose exec zone-fade-detector pip install package
+
+# Instead of: pytest tests/
+docker-compose run --rm zone-fade-detector-test
+```
 
 ## 🔄 Changelog
 

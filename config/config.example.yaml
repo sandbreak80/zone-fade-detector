@@ -85,7 +85,6 @@ alerts:
     - console
     - file
     - webhook
-    # - email
   
   min_qrs_score: 7              # Minimum QRS score to generate alert
   deduplication_minutes: 5      # Minutes to wait before duplicate alerts
@@ -101,16 +100,6 @@ alerts:
     log_file: logs/alerts.log
     max_file_size: 10485760     # 10MB
     backup_count: 5
-  
-  email:
-    enabled: false
-    smtp_server: smtp.gmail.com
-    smtp_port: 587
-    username: ${ALERT_EMAIL_USERNAME}
-    password: ${ALERT_EMAIL_PASSWORD}
-    from_address: ${ALERT_EMAIL_FROM}
-    to_addresses:
-      - ${ALERT_EMAIL_TO}
   
   webhook:
     enabled: true

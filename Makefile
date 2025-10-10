@@ -1,193 +1,173 @@
-# Zone Fade Detector - Makefile
-# Common development tasks and commands
+# Zone Fade Detector - Docker Makefile
+# Docker-based development tasks and commands
 
-.PHONY: help install install-dev test test-unit test-integration lint format type-check clean run setup-venv
+.PHONY: help build up down logs test clean run dev setup
 
 # Default target
 help:
-	@echo "Zone Fade Detector - Available Commands:"
+	@echo "Zone Fade Detector - Docker Commands:"
 	@echo ""
-	@echo "Setup:"
-	@echo "  setup-venv     Create and activate virtual environment"
-	@echo "  install        Install production dependencies"
-	@echo "  install-dev    Install development dependencies"
+	@echo "⚠️  IMPORTANT: This project uses Docker exclusively!"
+	@echo "   DO NOT install Python, pip, or virtual environments locally."
 	@echo ""
-	@echo "Development:"
-	@echo "  run            Run the zone fade detector"
-	@echo "  test           Run all tests"
+	@echo "Docker Commands:"
+	@echo "  build          Build Docker images"
+	@echo "  up             Start the zone fade detector"
+	@echo "  down           Stop all containers"
+	@echo "  logs           View container logs"
+	@echo "  test           Run tests in Docker"
+	@echo "  clean          Clean up Docker resources"
+	@echo "  run            Run detector in standard mode"
+	@echo "  dev            Run in development mode with hot reload"
+	@echo "  setup          Initial setup (copy config files)"
+	@echo ""
+	@echo "Testing:"
 	@echo "  test-unit      Run unit tests only"
 	@echo "  test-integration Run integration tests only"
-	@echo "  lint           Run linting checks"
-	@echo "  format         Format code with black and isort"
-	@echo "  type-check     Run type checking with mypy"
+	@echo "  test-coverage  Run tests with coverage report"
 	@echo ""
-	@echo "Maintenance:"
-	@echo "  clean          Clean up temporary files"
-	@echo "  docs           Generate documentation"
-	@echo "  pre-commit     Run pre-commit hooks"
+	@echo "Development:"
+	@echo "  shell          Open shell in container"
+	@echo "  install-pkg    Install package in container"
+	@echo "  format         Format code (in container)"
+	@echo "  lint           Run linting (in container)"
+	@echo "  type-check     Run type checking (in container)"
+	@echo ""
+	@echo "Operations:"
+	@echo "  live           Run in live mode (RTH only)"
+	@echo "  replay         Run in replay mode (requires START, END, SYMBOLS, PROVIDER)"
+	@echo "  test-alerts    Test alert channels"
+	@echo "  signals-today  View today's signals"
 
-# Setup virtual environment
-setup-venv:
-	python -m venv venv
-	@echo "Virtual environment created. Activate with:"
-	@echo "  source venv/bin/activate  # Linux/Mac"
-	@echo "  venv\\Scripts\\activate     # Windows"
+# Build Docker images
+build:
+	docker-compose build
 
-# Install production dependencies
-install:
-	pip install -r requirements.txt
+# Start the application
+up:
+	docker-compose up zone-fade-detector
 
-# Install development dependencies
-install-dev:
-	pip install -r requirements-dev.txt
-	pre-commit install
+# Start in background
+up-d:
+	docker-compose up -d zone-fade-detector
 
-# Run the application
-run:
-	python -m zone_fade_detector.main
+# Stop all containers
+down:
+	docker-compose down
 
-# Run with custom config
-run-config:
-	python -m zone_fade_detector.main --config config/config.yaml
+# View logs
+logs:
+	docker-compose logs -f zone-fade-detector
 
 # Run all tests
 test:
-	pytest
+	docker-compose run --rm zone-fade-detector-test
 
 # Run unit tests only
 test-unit:
-	pytest tests/unit/ -v
+	docker-compose run --rm zone-fade-detector-test pytest tests/unit/ -v
 
 # Run integration tests only
 test-integration:
-	pytest tests/integration/ -v
+	docker-compose run --rm zone-fade-detector-test pytest tests/integration/ -v
 
 # Run tests with coverage
 test-coverage:
-	pytest --cov=zone_fade_detector --cov-report=html --cov-report=term-missing
+	docker-compose run --rm zone-fade-detector-test pytest --cov=zone_fade_detector --cov-report=html --cov-report=term-missing
 
-# Run linting
-lint:
-	flake8 src/ tests/
-	black --check src/ tests/
-	isort --check-only src/ tests/
+# Clean up Docker resources
+clean:
+	docker-compose down
+	docker system prune -f
+	docker volume prune -f
 
-# Format code
+# Run detector in standard mode
+run:
+	docker-compose run --rm zone-fade-detector
+
+# Run in development mode with hot reload
+dev:
+	docker-compose up zone-fade-detector-dev
+
+# Open shell in container
+shell:
+	docker-compose exec zone-fade-detector bash
+
+# Install additional package in container
+install-pkg:
+	@if [ -z "$(PKG)" ]; then \
+		echo "Usage: make install-pkg PKG=package-name"; \
+		exit 1; \
+	fi
+	docker-compose exec zone-fade-detector pip install $(PKG)
+
+# Format code (in container)
 format:
-	black src/ tests/
-	isort src/ tests/
+	docker-compose run --rm zone-fade-detector-dev black src/ tests/
+	docker-compose run --rm zone-fade-detector-dev isort src/ tests/
 
-# Type checking
+# Run linting (in container)
+lint:
+	docker-compose run --rm zone-fade-detector-dev flake8 src/ tests/
+	docker-compose run --rm zone-fade-detector-dev black --check src/ tests/
+	docker-compose run --rm zone-fade-detector-dev isort --check-only src/ tests/
+
+# Run type checking (in container)
 type-check:
-	mypy src/
+	docker-compose run --rm zone-fade-detector-dev mypy src/
 
 # Run all quality checks
 check: lint type-check test
 
-# Clean up temporary files
-clean:
-	find . -type f -name "*.pyc" -delete
-	find . -type d -name "__pycache__" -delete
-	find . -type d -name "*.egg-info" -exec rm -rf {} +
-	rm -rf build/
-	rm -rf dist/
-	rm -rf .pytest_cache/
-	rm -rf .coverage
-	rm -rf htmlcov/
-	rm -rf .mypy_cache/
-	rm -rf .tox/
+# Initial setup (copy config files)
+setup:
+	@echo "Setting up Zone Fade Detector..."
+	@if [ ! -f ".env" ]; then \
+		cp .env.example .env; \
+		echo "✅ Created .env file from .env.example"; \
+		echo "⚠️  Please edit .env with your API credentials"; \
+	else \
+		echo "✅ .env file already exists"; \
+	fi
+	@if [ ! -f "config/config.yaml" ]; then \
+		cp config/config.example.yaml config/config.yaml; \
+		echo "✅ Created config/config.yaml from config/config.example.yaml"; \
+		echo "⚠️  Please edit config/config.yaml with your preferences"; \
+	else \
+		echo "✅ config/config.yaml already exists"; \
+	fi
+	@echo ""
+	@echo "🎉 Setup complete!"
+	@echo ""
+	@echo "Next steps:"
+	@echo "1. Edit .env with your API keys (Alpaca, Polygon, Discord)"
+	@echo "2. Edit config/config.yaml with your preferences"
+	@echo "3. Build: make build"
+	@echo "4. Test: make test-alerts"
+	@echo "5. Run: make run"
 
-# Generate documentation
-docs:
-	sphinx-build -b html docs/ docs/_build/html
+# Run in live mode (RTH only)
+live:
+	docker-compose run --rm zone-fade-detector --mode live --verbose
 
-# Run pre-commit hooks
-pre-commit:
-	pre-commit run --all-files
-
-# Build package
-build:
-	python -m build
-
-# Install package in development mode
-install-editable:
-	pip install -e .
-
-# Update dependencies
-update-deps:
-	pip-compile requirements.in
-	pip-compile requirements-dev.in
-
-# Security check
-security:
-	bandit -r src/
-
-# Performance profiling
-profile:
-	python -m cProfile -o profile.stats -m zone_fade_detector.main
-	python -c "import pstats; pstats.Stats('profile.stats').sort_stats('cumulative').print_stats(20)"
-
-# Database operations (if using database)
-db-migrate:
-	alembic upgrade head
-
-db-rollback:
-	alembic downgrade -1
-
-# Docker operations (if using Docker)
-docker-build:
-	docker build -t zone-fade-detector .
-
-docker-run:
-	docker run --env-file .env zone-fade-detector
-
-# Backup and restore
-backup:
-	tar -czf backup-$(shell date +%Y%m%d-%H%M%S).tar.gz data/ logs/ config/
-
-# Development server with auto-reload
-dev:
-	python -m zone_fade_detector.main --reload
-
-# Production server
-prod:
-	python -m zone_fade_detector.main --config config/production.yaml
-
-# Check system requirements
-check-requirements:
-	python --version
-	pip --version
-	@echo "Python version check:"
-	@python -c "import sys; print(f'Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')"
-	@echo "Required: Python 3.11+"
-	@python -c "import sys; exit(0 if sys.version_info >= (3, 11) else 1)" || echo "ERROR: Python 3.11+ required"
-
-# Initialize project (first time setup)
-init: setup-venv install-dev
-	@echo "Project initialized! Next steps:"
-	@echo "1. Activate virtual environment: source venv/bin/activate"
-	@echo "2. Copy .env.example to .env and configure API keys"
-	@echo "3. Copy config/config.example.yaml to config/config.yaml"
-	@echo "4. Run tests: make test"
-	@echo "5. Start the detector: make run"
-
-# Quick run sequence targets
-typecheck:
-	mypy src/
-
-format:
-	black src/ tests/
-	isort src/ tests/
-
-# Replay mode for historical data
+# Run in replay mode (historical data)
 replay:
 	@if [ -z "$(START)" ] || [ -z "$(END)" ] || [ -z "$(SYMBOLS)" ] || [ -z "$(PROVIDER)" ]; then \
 		echo "Usage: make replay START=2025-01-06 END=2025-01-10 SYMBOLS=SPY,QQQ,IWM PROVIDER=alpaca"; \
 		exit 1; \
 	fi
-	python -m zone_fade_detector.main --replay --start-date $(START) --end-date $(END) --symbols $(SYMBOLS) --provider $(PROVIDER)
+	docker-compose run --rm zone-fade-detector \
+		--mode replay \
+		--start-date $(START) \
+		--end-date $(END) \
+		--symbols $(SYMBOLS) \
+		--provider $(PROVIDER)
 
-# Inspect today's signals
+# Test alert channels
+test-alerts:
+	docker-compose run --rm zone-fade-detector --test-alerts
+
+# View today's signals
 signals-today:
 	@echo "Today's signals:"
 	@if [ -f "signals/$(shell date +%Y-%m-%d).jsonl" ]; then \
@@ -196,34 +176,44 @@ signals-today:
 		echo "No signals found for today"; \
 	fi
 
-# Live run during RTH
-live:
-	python -m zone_fade_detector.main --live
+# Show container status
+status:
+	docker-compose ps
 
-# Test alert channels
-test-alerts:
-	python -m zone_fade_detector.main --test-alerts
+# Restart containers
+restart:
+	docker-compose restart zone-fade-detector
 
-# Generate sample configuration
-gen-config:
-	@echo "Generating sample configuration..."
-	@mkdir -p config
-	@cp config/config.example.yaml config/config.yaml
-	@echo "Configuration generated: config/config.yaml"
-	@echo "Please edit with your API keys and preferences"
+# View container resource usage
+stats:
+	docker stats zone-fade-detector
 
-# Setup environment
-setup-env:
-	@echo "Setting up environment..."
-	@cp .env.example .env
-	@echo "Environment file created: .env"
-	@echo "Please edit with your API credentials"
+# Backup data
+backup:
+	@echo "Creating backup..."
+	tar -czf backup-$(shell date +%Y%m%d-%H%M%S).tar.gz data/ logs/ signals/ config/config.yaml .env
+	@echo "Backup created: backup-$(shell date +%Y%m%d-%H%M%S).tar.gz"
 
-# Full setup
-setup: gen-config setup-env
-	@echo "Full setup complete!"
-	@echo "Next steps:"
-	@echo "1. Edit .env with your API keys"
-	@echo "2. Edit config/config.yaml with your preferences"
-	@echo "3. Run: make test-alerts"
-	@echo "4. Run: make live"
+# Full development workflow
+dev-workflow: setup build test
+	@echo "Development workflow complete!"
+	@echo "Ready for development. Use 'make dev' to start with hot reload."
+
+# Production deployment
+prod-deploy: build
+	docker-compose -f docker-compose.yml up -d zone-fade-detector
+	@echo "Production deployment complete!"
+
+# Health check
+health:
+	docker-compose exec zone-fade-detector python -c "import zone_fade_detector; print('✅ Health check passed')"
+
+# Show help for Docker commands
+docker-help:
+	@echo "Docker Compose Commands:"
+	@echo "  docker-compose up zone-fade-detector     # Start detector"
+	@echo "  docker-compose up -d zone-fade-detector  # Start in background"
+	@echo "  docker-compose down                      # Stop all containers"
+	@echo "  docker-compose logs -f zone-fade-detector # View logs"
+	@echo "  docker-compose ps                        # Show container status"
+	@echo "  docker-compose exec zone-fade-detector bash # Open shell"
