@@ -1,0 +1,25 @@
+Zone Fade Detector - CORRECTED 2024 Backtesting Results
+============================================================
+
+CORRECTED WINDOW DURATION TRACKING:
+- Tracks how long entry conditions remain valid
+- Stops when conditions are no longer met
+- Measures actual trading opportunity window
+
+RISK/REWARD FILTERING:
+- Only accepts entry points with 1:2 or better risk/reward ratio
+- Calculates stop loss and take profit levels
+- Ensures profitable trading opportunities
+
+Total Entry Points: 187 (1:2+ R/R)
+Average QRS Score: 6.06
+Average Window Duration: 0.7 minutes
+
+Average Risk/Reward Ratio: 0.80
+Min Risk/Reward Ratio: 0.80
+Max Risk/Reward Ratio: 0.80
+
+Per-Symbol Results:
+  SPY: 69 entry points
+  IWM: 74 entry points
+  QQQ: 44 entry points

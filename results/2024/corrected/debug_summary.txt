@@ -1,0 +1,28 @@
+Zone Fade Detector - Debug Summary for Filtered Entry Points
+======================================================================
+
+SPY Debug Summary:
+  Total Debug Entries: 6
+  Filter Reasons:
+    zone_touch_only: 6
+
+IWM Debug Summary:
+  Total Debug Entries: 0
+  Filter Reasons:
+
+QQQ Debug Summary:
+  Total Debug Entries: 6
+  Filter Reasons:
+    ALL_CRITERIA_PASSED: 2
+    zone_touch_only: 4
+  QRS Score Stats:
+    Min: 7.00
+    Max: 7.00
+    Avg: 7.00
+    Count ≥7.0: 2
+  Risk/Reward Stats:
+    Min: 0.80
+    Max: 0.80
+    Avg: 0.80
+    Count ≥2.0: 0
+

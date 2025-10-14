@@ -1,0 +1,13 @@
+symbol,bar_index,timestamp,price,zone_level,zone_type,zone_strength,zone_quality,is_rejection_candle,is_volume_spike,qrs_score,qrs_grade,risk_reward_ratio,direction,hard_stop,t1_price,t2_price,t3_price,risk_amount,t1_reward,vwap,filter_reason
+SPY,174,2024-01-02 13:00:00+00:00,471.92,473.90220000000005,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+SPY,175,2024-01-02 13:01:00+00:00,471.9,473.90220000000005,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+SPY,176,2024-01-02 13:02:00+00:00,476.35,473.90220000000005,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+SPY,177,2024-01-02 13:03:00+00:00,471.96,473.90220000000005,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+SPY,178,2024-01-02 13:04:00+00:00,471.97,473.90220000000005,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+SPY,179,2024-01-02 13:05:00+00:00,472.07,473.90220000000005,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+QQQ,543,2024-01-02 19:06:00+00:00,401.485,401.5332,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+QQQ,546,2024-01-02 19:09:00+00:00,401.57,401.5332,prior_day_low,1.0,2,True,False,7.0,B,0.7999999999999992,LONG,401.5332,404.78256,407.99512,411.20768,4.0157,3.21256,401.83621562186806,ALL_CRITERIA_PASSED
+QQQ,547,2024-01-02 19:10:00+00:00,401.635,401.5332,prior_day_low,1.0,2,True,False,7.0,B,0.7999999999999977,LONG,401.5332,404.84808,408.06116,411.27423999999996,4.01635,3.21308,401.80396373445564,ALL_CRITERIA_PASSED
+QQQ,589,2024-01-02 19:52:00+00:00,401.49,401.5332,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+QQQ,647,2024-01-02 20:50:00+00:00,401.86,401.5332,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only
+QQQ,829,2024-01-03 09:00:00+00:00,401.62,401.5332,prior_day_low,1.0,2,False,False,0.0,,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,zone_touch_only

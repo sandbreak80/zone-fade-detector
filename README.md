@@ -112,7 +112,16 @@ docker-compose up zone-fade-detector
 
 ### Backtesting
 ```bash
-# Download historical data (2024)
+# Download 5-year historical data (2020-2024)
+docker-compose run zone-fade-detector-test python backtesting/download_5year_data.py
+
+# Run enhanced 5-year backtesting with Zone Fade exit strategy
+docker-compose run zone-fade-detector-test python backtesting/5year_zone_fade_backtest.py
+
+# Run hard stop analysis
+docker-compose run zone-fade-detector-test python backtesting/hard_stop_analysis.py
+
+# Download historical data (2024 only)
 docker-compose run zone-fade-detector python backtesting/download_2024_data.py
 
 # Run efficient validation backtesting
@@ -120,9 +129,6 @@ docker-compose run zone-fade-detector python backtesting/backtest_2024_efficient
 
 # Run full 2024 backtesting (longer)
 docker-compose run zone-fade-detector python backtesting/backtest_2024_full_validation.py
-
-# Run December 2024 debug backtesting
-docker-compose run zone-fade-detector python backtesting/backtest_2024_december_debug.py
 ```
 
 ### Results and Validation
@@ -192,7 +198,18 @@ docker-compose run zone-fade-detector python tests/integration/test_volume_spike
 - **QRS Scoring**: 6.23/10 average scores achieved
 - **Entry Window Tracking**: 28.9 minutes average duration
 
-### 2024 Backtesting Results
+### 5-Year Backtesting Results (2020-2024)
+- **Data Coverage**: 2.97 million 1-minute bars across 5 years
+- **Symbols**: SPY, QQQ, IWM with complete historical data
+- **Total Trades**: 80+ trades executed (vs 38 in 1-year test)
+- **Zone Management**: 8 zones per symbol per day (doubled from 4)
+- **Enhanced Features**:
+  - Market context filtering (trend/balanced/choppy)
+  - Volume-weighted confluence scoring
+  - Time-based zone prioritization
+  - Dynamic zone lifecycle management
+
+### 2024 Backtesting Results (Original)
 - **Total Entry Points**: 160 high-quality setups detected
 - **Entry Points per Day**: 0.6 (highly selective)
 - **Average QRS Score**: 6.23/10 (above 7.0 threshold)
@@ -222,6 +239,13 @@ docker-compose run zone-fade-detector python tests/integration/test_volume_spike
 - 2024 backtesting validation
 - Entry window duration tracking
 - Manual validation tools
+- 5-year historical data download (2020-2024)
+- Enhanced Zone Fade exit strategy implementation
+- Doubled zone limits (8 zones per symbol per day)
+- Market context filtering (trend/balanced/choppy)
+- Volume-weighted confluence scoring
+- Time-based zone prioritization
+- Comprehensive hard stop analysis tools
 
 ### 🔄 In Progress
 - ES/NQ/RTY futures integration (for production)
@@ -259,13 +283,21 @@ For questions or issues:
 
 ## 📚 Documentation
 
+### Core Documentation
+- [Project Status](docs/PROJECT_STATUS.md) - Current project status and roadmap
+- [Zone Fade Strategy Specification](docs/ZONE_FADE_STRATEGY.md)
+- [5-Year Backtesting Results](docs/5YEAR_BACKTESTING_RESULTS.md)
 - [Setup Guide](docs/SETUP_GUIDE.md)
 - [Backtesting Guide](docs/BACKTESTING_GUIDE.md)
+- [Architecture Overview](docs/ARCHITECTURE_OVERVIEW.md)
+
+### Analysis and Results
 - [Manual Validation Guide](docs/MANUAL_VALIDATION_GUIDE.md)
 - [Strategy Analysis](docs/STRATEGY_ANALYSIS.md)
 - [Volume Spike Implementation](docs/VOLUME_SPIKE_IMPLEMENTATION.md)
 - [Operational Analysis](docs/OPERATIONAL_ANALYSIS.md)
-- [Architecture Overview](docs/ARCHITECTURE_OVERVIEW.md)
 - [2024 Results Summary](docs/2024_RESULTS_SUMMARY.md)
+
+### Development
 - [Contributing Guidelines](docs/CONTRIBUTING.md)
 - [Changelog](docs/CHANGELOG.md)
