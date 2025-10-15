@@ -176,8 +176,19 @@ class MarketInternalsMonitor:
         x = np.arange(len(recent_ad))
         
         # Linear regression
-        slope, intercept, r_value, p_value, std_err = np.polyfit(x, recent_ad, 1, full=False)
-        r_squared = r_value ** 2
+        try:
+            coeffs = np.polyfit(x, recent_ad, 1)
+            slope = coeffs[0]
+            intercept = coeffs[1]
+            
+            # Calculate R-squared manually
+            y_pred = slope * x + intercept
+            ss_res = np.sum((recent_ad - y_pred) ** 2)
+            ss_tot = np.sum((recent_ad - np.mean(recent_ad)) ** 2)
+            r_squared = 1 - (ss_res / ss_tot) if ss_tot != 0 else 0
+        except:
+            slope = 0
+            r_squared = 0
         
         # Classify A/D status
         slope_per_bar = slope  # slope is already per bar

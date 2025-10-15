@@ -21,9 +21,9 @@ from dataclasses import dataclass
 from .market_type_detector import MarketTypeDetector, MarketTypeFilter
 from .market_internals import MarketInternalsMonitor, InternalsFilter
 from .zone_approach_analyzer import ZoneApproachAnalyzer, ZoneApproachFilter
-from .zone_touch_tracker import ZoneTouchTracker, ZoneTouchFilter
-from .entry_optimizer import EntryOptimizer, EntryOptimizationFilter
-from .session_analyzer import SessionAnalyzer, SessionAnalysisFilter
+from ..tracking.zone_touch_tracker import ZoneTouchTracker, ZoneTouchFilter
+from ..optimization.entry_optimizer import EntryOptimizer, EntryOptimizationFilter
+from ..analysis.session_analyzer import SessionAnalyzer, SessionAnalysisFilter
 from ..scoring.enhanced_qrs import EnhancedQRSScorer, QRSResult
 
 @dataclass
@@ -315,69 +315,4 @@ class EnhancedFilterPipeline:
         pass
 
 
-# Placeholder classes for missing components
-# These would be implemented in separate files
-
-class ZoneApproachAnalyzer:
-    """Placeholder for zone approach analysis."""
-    def __init__(self, **kwargs):
-        pass
-    def get_statistics(self):
-        return {}
-
-class ZoneApproachFilter:
-    """Placeholder for zone approach filter."""
-    def __init__(self, analyzer):
-        self.analyzer = analyzer
-    def filter_signal(self, signal, market_data):
-        return signal
-    def get_filter_statistics(self):
-        return {}
-
-class ZoneTouchTracker:
-    """Placeholder for zone touch tracking."""
-    def __init__(self, **kwargs):
-        pass
-    def get_statistics(self):
-        return {}
-
-class ZoneTouchFilter:
-    """Placeholder for zone touch filter."""
-    def __init__(self, tracker):
-        self.tracker = tracker
-    def filter_signal(self, signal, market_data):
-        return signal
-    def get_filter_statistics(self):
-        return {}
-
-class EntryOptimizer:
-    """Placeholder for entry optimization."""
-    def __init__(self, **kwargs):
-        pass
-    def get_statistics(self):
-        return {}
-
-class EntryOptimizationFilter:
-    """Placeholder for entry optimization filter."""
-    def __init__(self, optimizer):
-        self.optimizer = optimizer
-    def filter_signal(self, signal, market_data):
-        return signal
-    def get_filter_statistics(self):
-        return {}
-
-class SessionAnalyzer:
-    """Placeholder for session analysis."""
-    def __init__(self, **kwargs):
-        pass
-    def get_statistics(self):
-        return {}
-
-class SessionAnalysisFilter:
-    """Placeholder for session analysis filter."""
-    def __init__(self, analyzer):
-        self.analyzer = analyzer
-    def filter_signal(self, signal, market_data):
-        return signal
-    def get_filter_statistics(self):
-        return {}
+# All components are now implemented in their respective modules

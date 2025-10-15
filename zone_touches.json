@@ -1,0 +1,36 @@
+{
+  "touch_data": {
+    "SPY_SUPPORT_4500.00": {
+      "2025-10-13": 3
+    }
+  },
+  "touch_history": {
+    "SPY_SUPPORT_4500.00": [
+      {
+        "zone_id": "SPY_SUPPORT_4500.00",
+        "touch_number": 1,
+        "timestamp": "2025-10-14 09:38:58.831035",
+        "price_level": 4500.0,
+        "trade_direction": "LONG",
+        "session_date": "2025-10-13"
+      },
+      {
+        "zone_id": "SPY_SUPPORT_4500.00",
+        "touch_number": 2,
+        "timestamp": "2025-10-14 09:38:58.831161",
+        "price_level": 4500.0,
+        "trade_direction": "LONG",
+        "session_date": "2025-10-13"
+      },
+      {
+        "zone_id": "SPY_SUPPORT_4500.00",
+        "touch_number": 3,
+        "timestamp": "2025-10-14 09:38:58.831285",
+        "price_level": 4500.0,
+        "trade_direction": "LONG",
+        "session_date": "2025-10-13"
+      }
+    ]
+  },
+  "last_updated": "2025-10-14T09:38:58.831309"
+}

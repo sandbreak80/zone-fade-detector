@@ -285,6 +285,8 @@ For questions or issues:
 
 ### Core Documentation
 - [Project Status](docs/PROJECT_STATUS.md) - Current project status and roadmap
+- [Enhancement Implementation Status](docs/ENHANCEMENT_IMPLEMENTATION_STATUS.md) - Enhancement filters implementation progress
+- [Enhancement Implementation Plan](docs/ENHANCEMENT_IMPLEMENTATION_PLAN.md) - Detailed implementation roadmap
 - [Zone Fade Strategy Specification](docs/ZONE_FADE_STRATEGY.md)
 - [5-Year Backtesting Results](docs/5YEAR_BACKTESTING_RESULTS.md)
 - [Setup Guide](docs/SETUP_GUIDE.md)

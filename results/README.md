@@ -1,4 +1,4 @@
-# Backtesting Results and Validation
+# Zone Fade Detector - Backtesting Results
 
 This directory contains all backtesting results and validation data for the Zone Fade Detector.
 
@@ -10,18 +10,16 @@ results/
 │   ├── efficient/                 # Efficient validation results (50k bars per symbol)
 │   │   ├── zone_fade_entry_points_2024_efficient.csv
 │   │   └── backtesting_summary.txt
-│   ├── full/                     # Full 2024 dataset results (when available)
-│   └── december/                 # December 2024 debug results (when available)
+│   └── enhanced/                  # Enhanced validation results (when available)
+│       ├── zone_fade_entry_points_2024_enhanced.csv
+│       └── enhanced_backtesting_summary.txt
 ├── manual_validation/             # Manual validation package
+│   ├── charts/                   # Chart visualizations
+│   ├── analysis/                 # Analysis files
 │   ├── README.md                 # Validation package overview
 │   ├── validation_checklist.md   # Step-by-step validation checklist
-│   ├── chart_analysis_template.md # Chart analysis template
-│   └── entry_points/             # Entry points data for validation
-│       ├── zone_fade_entry_points_2024_efficient.csv
-│       └── backtesting_summary.txt
-└── summaries/                    # Summary reports
-    ├── zone_fade_entry_points_2024_efficient.csv
-    └── backtesting_summary.txt
+│   └── chart_analysis_template.md # Chart analysis template
+└── README.md                     # This file
 ```
 
 ## 📊 Current Results
@@ -43,7 +41,7 @@ results/
 ## 🔍 Manual Validation
 
 ### Quick Start
-1. **Review Entry Points**: Open `manual_validation/entry_points/zone_fade_entry_points_2024_efficient.csv`
+1. **Review Entry Points**: Open `2024/efficient/zone_fade_entry_points_2024_efficient.csv`
 2. **Use Validation Tools**: Follow `manual_validation/validation_checklist.md`
 3. **Chart Analysis**: Use `manual_validation/chart_analysis_template.md`
 4. **Track Results**: Document your validation findings
@@ -58,13 +56,13 @@ results/
 ## 📈 Key Files
 
 ### Entry Points Data
-- **`zone_fade_entry_points_2024_efficient.csv`**: Complete entry point data with all details
-- **`backtesting_summary.txt`**: Summary statistics and performance metrics
+- **`2024/efficient/zone_fade_entry_points_2024_efficient.csv`**: Complete entry point data with all details
+- **`2024/efficient/backtesting_summary.txt`**: Summary statistics and performance metrics
 
 ### Validation Tools
-- **`validation_checklist.md`**: Step-by-step validation checklist
-- **`chart_analysis_template.md`**: Template for chart analysis
-- **`README.md`**: Comprehensive validation guide
+- **`manual_validation/validation_checklist.md`**: Step-by-step validation checklist
+- **`manual_validation/chart_analysis_template.md`**: Template for chart analysis
+- **`manual_validation/README.md`**: Comprehensive validation guide
 
 ## 🎯 Quality Metrics
 

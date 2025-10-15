@@ -20,6 +20,10 @@ services:
       - ./config:/app/config:ro
       - ./.env:/app/.env:ro
       
+      # Source code and scripts
+      - ./src:/app/src:Z
+      - ./backtesting:/app/backtesting:Z
+      
       # Logs directory (with proper permissions)
       - ./logs:/app/logs:Z
       
@@ -28,6 +32,12 @@ services:
       
       # Data cache directory (with proper permissions)
       - ./data:/app/data:Z
+      
+      # Outputs directory (with proper permissions)
+      - ./outputs:/app/outputs:Z
+      
+      # Results directory (with proper permissions)
+      - ./results:/app/results:Z
     
     # Port mapping (for future web interface)
     ports:
@@ -127,9 +137,13 @@ services:
     volumes:
       - ./src:/app/src:Z
       - ./tests:/app/tests:Z
+      - ./backtesting:/app/backtesting:Z
       - ./config:/app/config:ro
       - ./.env:/app/.env:ro
       - ./logs:/app/logs:Z
+      - ./data:/app/data:Z
+      - ./outputs:/app/outputs:Z
+      - ./results:/app/results:Z
     
     # Install development dependencies and run tests
     command: >

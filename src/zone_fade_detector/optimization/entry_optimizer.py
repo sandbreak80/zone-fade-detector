@@ -229,7 +229,7 @@ class EntryOptimizer:
             rationale = "ZFR: Aggressive front entry for 3+R setup"
         else:  # ZF-TR
             target_percentage = self.zf_tr_entry_pct
-            setup_enum = SetupType.ZF-TR
+            setup_enum = SetupType.ZF_TR
             rationale = "ZF-TR: Defensive middle-back entry for 2-3R setup"
         
         # Calculate optimal entry price
@@ -340,8 +340,8 @@ class EntryOptimizer:
             # ZFR should be at front or middle
             if entry_calculation.entry_position == ZonePosition.BACK:
                 return False
-        else:  # ZF-TR
-            # ZF-TR should be at middle or back
+        else:  # ZF_TR
+            # ZF_TR should be at middle or back
             if entry_calculation.entry_position == ZonePosition.FRONT:
                 return False
         
@@ -372,13 +372,13 @@ class EntryOptimizer:
                 adjustment += 0.1  # Good for ZFR
             else:  # BACK
                 adjustment -= 0.2  # Poor for ZFR
-        else:  # ZF-TR
+        else:  # ZF_TR
             if entry_calculation.entry_position == ZonePosition.BACK:
-                adjustment += 0.3  # Ideal for ZF-TR
+                adjustment += 0.3  # Ideal for ZF_TR
             elif entry_calculation.entry_position == ZonePosition.MIDDLE:
-                adjustment += 0.1  # Good for ZF-TR
+                adjustment += 0.1  # Good for ZF_TR
             else:  # FRONT
-                adjustment -= 0.2  # Poor for ZF-TR
+                adjustment -= 0.2  # Poor for ZF_TR
         
         # Zone position quality adjustment
         if zone_position.position_percentage <= 0.2 or zone_position.position_percentage >= 0.8:

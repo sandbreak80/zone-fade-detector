@@ -1,0 +1,36 @@
+{
+  "analysis_date": "2025-10-14T20:43:04.276211",
+  "total_trades": 453,
+  "hard_stop_count": 385,
+  "hard_stop_rate": 84.98896247240619,
+  "winning_count": 72,
+  "win_rate": 15.894039735099339,
+  "root_causes": [
+    {
+      "cause": "QRS Score Not Discriminating",
+      "severity": "CRITICAL",
+      "evidence": "QRS difference between winners and losers: -0.35 (too small)",
+      "recommendation": "Enhance QRS scoring to better differentiate quality setups"
+    },
+    {
+      "cause": "Overall QRS Too Low",
+      "severity": "MEDIUM",
+      "evidence": "Average QRS across all trades: 6.51 (below 7.0 threshold)",
+      "recommendation": "Increase minimum QRS threshold to 7.0+ and enhance scoring factors"
+    }
+  ],
+  "recommendations": [
+    "enhance_zone_validation",
+    "stricter_entry_criteria",
+    "better_stop_placement",
+    "zone_touch_tracking",
+    "enhanced_qrs_scoring"
+  ],
+  "key_metrics": {
+    "avg_hard_stop_qrs": 6.561038961038961,
+    "avg_winning_qrs": 6.208333333333333,
+    "avg_bars_to_hard_stop": 69.48311688311688,
+    "quick_stops_pct": 23.636363636363637,
+    "avg_stop_distance_pct": 0.33791164258420564
+  }
+}

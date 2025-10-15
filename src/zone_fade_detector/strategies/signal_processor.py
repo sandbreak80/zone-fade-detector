@@ -58,13 +58,15 @@ class SignalProcessor:
     
     def process_signals(
         self,
-        symbol_data: Dict[str, List[OHLCVBar]]
+        symbol_data: Dict[str, List[OHLCVBar]],
+        window_data: Optional[Dict[str, Dict[str, List[OHLCVBar]]]] = None
     ) -> List[Alert]:
         """
         Process signals for multiple symbols.
         
         Args:
             symbol_data: Dictionary mapping symbols to OHLCV bars
+            window_data: Optional window data for additional analysis
             
         Returns:
             List of generated alerts

@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-10-14T21:29:23.097051",
+  "phase": "Phase 2",
+  "improvements": [
+    "Revised targets: 0.5R, 1R, 1.5R",
+    "Breakeven stops after 0.5R",
+    "Time-based exits (3 hours)",
+    "Earlier EOD cutoff (3:30 PM)"
+  ],
+  "total_trades": 290,
+  "hard_stop_rate": 21.72413793103448,
+  "win_rate": 11.379310344827587,
+  "profit_factor": 1.3885407211534244,
+  "total_pnl": 24.163600000000145,
+  "eod_exit_rate": 59.6551724137931,
+  "exit_breakdown": {
+    "EOD_EARLY": 173,
+    "HARD_STOP": 24,
+    "T3": 3,
+    "TIME_EXIT_NO_MOMENTUM": 21,
+    "BREAKEVEN_STOP": 39,
+    "T2": 30
+  },
+  "targets_met": 1,
+  "targets": {
+    "Hard Stop Rate": {
+      "target": "<50%",
+      "actual": "21.7%",
+      "met": true
+    },
+    "Win Rate": {
+      "target": ">40%",
+      "actual": "11.4%",
+      "met": false
+    },
+    "Profit Factor": {
+      "target": ">1.5",
+      "actual": "1.39",
+      "met": false
+    },
+    "EOD Exit Rate": {
+      "target": "<30%",
+      "actual": "59.7%",
+      "met": false
+    }
+  }
+}

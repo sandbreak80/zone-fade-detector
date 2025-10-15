@@ -1,0 +1,30 @@
+{
+  "trading": {
+    "starting_capital": 10000.0,
+    "ending_capital": 10200.036209000005,
+    "total_return_pct": 2.000362090000053,
+    "total_trades": 82,
+    "win_rate": 42.68292682926829,
+    "hard_stop_rate": 19.51219512195122,
+    "profit_factor": 1.2258650012138057,
+    "sharpe_ratio": -2.067018013311367,
+    "max_drawdown": 3.1617635424956436,
+    "total_commission": 82.0,
+    "avg_win": 31.01946311428561,
+    "avg_loss": -18.84351063829779
+  },
+  "buy_hold": {
+    "starting_capital": 10000.0,
+    "ending_capital": 12356.599999999999,
+    "total_return_pct": 23.565999999999985,
+    "sharpe_ratio": 0.4775281059828446,
+    "shares": 24,
+    "entry_price": 409.79,
+    "exit_price": 514.9
+  },
+  "comparison": {
+    "outperformance_pct": -21.565637909999932,
+    "outperformance_dollars": -2156.563790999993,
+    "winner": "Buy & Hold"
+  }
+}
