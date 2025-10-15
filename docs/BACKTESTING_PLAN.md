@@ -29,7 +29,7 @@ Download 2024 historical data and run Zone Fade Detector against it to validate 
 
 ### Step 1: Download 2024 Data
 ```bash
-cd /home/brad/zone-fade-detector
+cd /path/to/zone-fade-detector
 python download_2024_data.py
 ```
 

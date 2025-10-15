@@ -9,7 +9,7 @@ You were downloading 2024 historical data and running Zone Fade detection agains
 
 ### 1. Download 2024 Historical Data
 ```bash
-cd /home/brad/zone-fade-detector
+cd /path/to/zone-fade-detector
 python download_2024_data.py
 ```
 *This downloads full year 2024 data for SPY, QQQ, IWM and saves to `/tmp/zone_fade_data_2024/`*
