@@ -1,0 +1,156 @@
+# Bitcoin Zone Fade Detector Backtesting Configuration
+# This configuration is optimized for backtesting the Bitcoin Zone Fade strategy
+
+# Backtesting Settings
+backtesting:
+  # Test period
+  start_date: "2024-01-01"
+  end_date: "2024-12-31"
+  
+  # Capital and position sizing
+  initial_capital: 10000.0
+  position_size: 0.1  # 10% of capital per trade
+  max_positions: 3    # Maximum concurrent positions
+  
+  # Trading costs
+  commission: 0.001   # 0.1% commission per trade
+  slippage: 0.0005    # 0.05% slippage per trade
+  
+  # Risk management
+  max_drawdown: 0.20  # 20% maximum drawdown
+  stop_loss_atr_multiplier: 2.0
+  take_profit_atr_multiplier: 3.0
+
+# Strategy Parameters (optimized for crypto)
+strategy:
+  # QRS scoring
+  min_qrs_score: 6        # Lower threshold for crypto volatility
+  max_qrs_score: 10
+  
+  # Volume analysis
+  volume_threshold: 1.5   # 1.5x average volume
+  volume_lookback: 20     # 20 bars for volume average
+  
+  # Rejection candle criteria
+  rejection_threshold: 0.3  # 30% wick ratio
+  min_wick_size: 0.02      # 2% minimum wick size
+  
+  # Zone analysis
+  zone_proximity: 0.8      # 0.8% proximity to zone
+  zone_strength_min: 0.6   # Minimum zone strength
+  zone_quality_min: 2      # Minimum zone quality
+  
+  # Timeframe settings
+  micro_window_minutes: 5
+  short_window_minutes: 15
+  medium_window_minutes: 60
+  long_window_minutes: 240
+  
+  # VWAP settings
+  vwap_lookback_hours: 12
+  vwap_deviation_threshold: 0.02  # 2% deviation from VWAP
+  
+  # Swing structure
+  swing_lookback_bars: 50
+  swing_min_strength: 0.6
+  choch_confirmation_bars: 2
+
+# Data Settings
+data:
+  # Symbols to test
+  symbols: ["bitcoin", "ethereum"]
+  
+  # Data timeframe
+  timeframe: "1h"  # 1-hour bars
+  
+  # Historical data
+  lookback_days: 365  # 1 year of data
+  min_bars_required: 1000
+  
+  # Data quality
+  fill_gaps: true
+  remove_outliers: true
+  outlier_threshold: 3.0  # 3 standard deviations
+
+# Performance Analysis
+analysis:
+  # Metrics to calculate
+  calculate_sharpe: true
+  calculate_sortino: true
+  calculate_calmar: true
+  calculate_var: true
+  
+  # Risk metrics
+  var_confidence: 0.95
+  expected_shortfall: true
+  
+  # Time-based analysis
+  analyze_by_hour: true
+  analyze_by_day: true
+  analyze_by_month: true
+  
+  # Market regime analysis
+  bull_market_threshold: 0.05  # 5% monthly return
+  bear_market_threshold: -0.05  # -5% monthly return
+
+# Output Settings
+output:
+  # Results file
+  results_file: "backtest_results.json"
+  detailed_results: true
+  
+  # Charts and visualizations
+  generate_charts: true
+  chart_directory: "backtest_charts/"
+  
+  # Performance report
+  generate_report: true
+  report_file: "backtest_report.html"
+  
+  # Trade log
+  log_trades: true
+  trade_log_file: "backtest_trades.csv"
+
+# Optimization Settings (for parameter optimization)
+optimization:
+  enabled: false
+  
+  # Parameters to optimize
+  parameters:
+    min_qrs_score: [5, 6, 7, 8]
+    volume_threshold: [1.2, 1.5, 2.0, 2.5]
+    rejection_threshold: [0.2, 0.3, 0.4, 0.5]
+    zone_proximity: [0.5, 0.8, 1.0, 1.2]
+  
+  # Optimization method
+  method: "grid_search"  # or "random_search", "bayesian"
+  
+  # Optimization settings
+  max_iterations: 100
+  cv_folds: 5
+  scoring_metric: "sharpe_ratio"
+
+# Validation Settings
+validation:
+  # Walk-forward analysis
+  walk_forward: true
+  training_period_months: 6
+  testing_period_months: 1
+  
+  # Out-of-sample testing
+  out_of_sample_percent: 0.2  # 20% for final validation
+  
+  # Cross-validation
+  cross_validation: true
+  cv_folds: 5
+
+# Logging
+logging:
+  level: "INFO"
+  file: "logs/backtest.log"
+  console: true
+  
+  # Detailed logging
+  log_trades: true
+  log_signals: true
+  log_performance: true
