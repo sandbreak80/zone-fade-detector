@@ -14,6 +14,7 @@ import sys
 
 from zone_fade_detector.core.models import OHLCVBar, Alert
 from zone_fade_detector.core.rolling_window_manager import RollingWindowManager, WindowType
+from zone_fade_detector.core.alert_system import AlertSystem, AlertChannelConfig
 from zone_fade_detector.data import DataManager, DataManagerConfig, AlpacaConfig, PolygonConfig
 from zone_fade_detector.strategies import SignalProcessor, SignalProcessorConfig
 from zone_fade_detector.utils.logging import setup_logging
@@ -47,6 +48,9 @@ class ZoneFadeDetector:
         
         # Initialize signal processor
         self.signal_processor = self._create_signal_processor()
+        
+        # Initialize alert system
+        self.alert_system = self._create_alert_system()
         
         # Runtime state
         self.is_running = False
@@ -116,6 +120,41 @@ class ZoneFadeDetector:
         )
         
         return SignalProcessor(processor_config)
+    
+    def _create_alert_system(self) -> AlertSystem:
+        """Create alert system from configuration."""
+        import os
+        
+        # Get alert configuration
+        alert_config = self.config.get('alerts', {})
+        
+        # Create alert channel configuration
+        channel_config = AlertChannelConfig(
+            console_enabled=alert_config.get('console', {}).get('enabled', True),
+            file_enabled=alert_config.get('file', {}).get('enabled', True),
+            email_enabled=alert_config.get('email', {}).get('enabled', False),
+            webhook_enabled=alert_config.get('webhook', {}).get('enabled', False),
+            
+            # File configuration
+            file_path=alert_config.get('file', {}).get('log_file', '/app/logs/alerts.log'),
+            file_max_size=alert_config.get('file', {}).get('max_file_size', 10485760),
+            file_backup_count=alert_config.get('file', {}).get('backup_count', 5),
+            
+            # Email configuration
+            email_smtp_server=alert_config.get('email', {}).get('smtp_server', 'smtp.gmail.com'),
+            email_smtp_port=alert_config.get('email', {}).get('smtp_port', 587),
+            email_username=alert_config.get('email', {}).get('username', ''),
+            email_password=alert_config.get('email', {}).get('password', ''),
+            email_from=alert_config.get('email', {}).get('from', ''),
+            email_to=alert_config.get('email', {}).get('to', []),
+            
+            # Webhook configuration
+            webhook_url=os.getenv('DISCORD_WEBHOOK_URL', alert_config.get('webhook', {}).get('url', '')),
+            webhook_secret=alert_config.get('webhook', {}).get('secret', ''),
+            webhook_timeout=alert_config.get('webhook', {}).get('timeout', 5)
+        )
+        
+        return AlertSystem(channel_config)
     
     async def run(self) -> None:
         """Run the Zone Fade Detector."""
@@ -224,12 +263,22 @@ class ZoneFadeDetector:
     
     async def _handle_alerts(self, alerts: List[Alert]) -> None:
         """Handle generated alerts."""
+        if not alerts:
+            return
+            
+        self.logger.info(f"Processing {len(alerts)} Zone Fade alerts...")
+        
         for alert in alerts:
             try:
                 await self._process_alert(alert)
                 self.stats['total_alerts'] += 1
+                
+                # Small delay to avoid rate limiting
+                await asyncio.sleep(0.5)
+                
             except Exception as e:
                 self.logger.error(f"Error processing alert {alert.alert_id}: {e}")
+                self.stats['errors'] += 1
     
     async def _process_alert(self, alert: Alert) -> None:
         """Process a single alert."""
@@ -244,9 +293,24 @@ class ZoneFadeDetector:
         alert_dict = alert.to_dict()
         self.logger.info(f"Alert details: {alert_dict}")
         
-        # Here you would typically send alerts to external systems
-        # For now, we just log them
-        self._log_alert_to_file(alert)
+        # Send alerts through all configured channels (console, file, Discord, etc.)
+        try:
+            results = await self.alert_system.send_alert(alert)
+            
+            # Log results
+            successful_channels = [name for name, success in results.items() if success]
+            failed_channels = [name for name, success in results.items() if not success]
+            
+            if successful_channels:
+                self.logger.info(f"Alert sent successfully through: {', '.join(successful_channels)}")
+            
+            if failed_channels:
+                self.logger.warning(f"Alert failed to send through: {', '.join(failed_channels)}")
+                
+        except Exception as e:
+            self.logger.error(f"Error sending alert through alert system: {e}")
+            # Fallback to file logging
+            self._log_alert_to_file(alert)
     
     def _log_alert_to_file(self, alert: Alert) -> None:
         """Log alert to file."""
@@ -272,6 +336,63 @@ class ZoneFadeDetector:
         self.logger.info(f"Received signal {signum}, shutting down gracefully...")
         self.is_running = False
     
+    async def test_alert_system(self) -> Dict[str, bool]:
+        """Test the alert system by sending a test alert."""
+        from zone_fade_detector.core.models import ZoneFadeSetup, Zone, ZoneType, SetupDirection, OHLCVBar, QRSFactors
+        from datetime import datetime
+        
+        try:
+            # Create a test alert
+            test_bar = OHLCVBar(
+                timestamp=datetime.now(),
+                open=485.0,
+                high=485.5,
+                low=484.8,
+                close=485.2,
+                volume=1000000
+            )
+            
+            test_zone = Zone(
+                level=485.0,
+                zone_type=ZoneType.PRIOR_DAY_HIGH,
+                strength=0.8,
+                quality=2
+            )
+            
+            qrs_factors = QRSFactors()
+            qrs_factors.zone_quality = 2
+            qrs_factors.rejection_clarity = 2
+            qrs_factors.structure_flip = 1
+            qrs_factors.context = 2
+            qrs_factors.intermarket_divergence = 1
+            
+            test_setup = ZoneFadeSetup(
+                symbol='TEST',
+                direction=SetupDirection.LONG,
+                zone=test_zone,
+                rejection_candle=test_bar,
+                choch_confirmed=True,
+                qrs_factors=qrs_factors,
+                timestamp=datetime.now()
+            )
+            
+            test_alert = Alert(
+                alert_id='TEST_ALERT_001',
+                setup=test_setup,
+                priority='HIGH',
+                created_at=datetime.now()
+            )
+            
+            # Send test alert
+            results = await self.alert_system.send_alert(test_alert)
+            
+            self.logger.info(f"Alert system test results: {results}")
+            return results
+            
+        except Exception as e:
+            self.logger.error(f"Error testing alert system: {e}")
+            return {'error': str(e)}
+    
     def get_status(self) -> Dict[str, Any]:
         """Get detector status."""
         uptime = None
@@ -285,7 +406,8 @@ class ZoneFadeDetector:
             'poll_interval': self.poll_interval,
             'stats': self.stats,
             'data_manager_stats': self.data_manager.get_cache_stats(),
-            'signal_processor_stats': self.signal_processor.get_processor_stats()
+            'signal_processor_stats': self.signal_processor.get_processor_stats(),
+            'alert_channels': len(self.alert_system.channels)
         }
     
     def stop(self) -> None:

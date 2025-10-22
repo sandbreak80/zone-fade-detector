@@ -103,6 +103,11 @@ signals/
 *.pkl
 *.pickle
 
+# Bitcoin detector specific
+cache/
+cache/bitcoin/
+/tmp/bitcoin_cache_*
+
 # IDE
 .vscode/
 .idea/

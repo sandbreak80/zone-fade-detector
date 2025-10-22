@@ -85,7 +85,7 @@ from zone_fade_detector.utils.logging import setup_logging
 @click.option(
     "--live",
     is_flag=True,
-    help="Run in live mode during RTH",
+    help="Run in live mode with real-time data and Discord alerts",
 )
 def main(
     config: Path,
@@ -152,7 +152,7 @@ def main(
         # Test alerts if requested
         if test_alerts:
             console.print("[yellow]Testing alert channels...[/yellow]")
-            asyncio.run(test_alert_channels(detector))
+            asyncio.run(test_alert_system(detector))
             return
         
         # Run in appropriate mode
@@ -173,31 +173,43 @@ def main(
         sys.exit(1)
 
 
-async def test_alert_channels(detector: ZoneFadeDetector) -> None:
-    """Test alert channels."""
-    from zone_fade_detector.core.alert_system import AlertChannelConfig
-    
-    # Create test alert configuration
-    alert_config = AlertChannelConfig(
-        console_enabled=True,
-        file_enabled=True,
-        email_enabled=False,  # Disable email for testing
-        webhook_enabled=False  # Disable webhook for testing
-    )
-    
-    from zone_fade_detector.core.alert_system import AlertSystem
-    alert_system = AlertSystem(alert_config)
-    
-    # Test channels
-    results = alert_system.test_channels()
-    
+async def test_alert_system(detector: ZoneFadeDetector) -> None:
+    """Test alert system with Discord webhook."""
     console = Console()
-    console.print("\n[bold]Alert Channel Test Results:[/bold]")
-    for channel, success in results.items():
-        status = "✅ PASS" if success else "❌ FAIL"
-        console.print(f"  {channel}: {status}")
     
-    console.print(f"\nOverall: {'✅ All channels working' if all(results.values()) else '❌ Some channels failed'}")
+    try:
+        console.print("[blue]Testing Zone Fade Detector Alert System...[/blue]")
+        
+        # Test the alert system
+        results = await detector.test_alert_system()
+        
+        console.print("\n[bold]Alert System Test Results:[/bold]")
+        
+        if 'error' in results:
+            console.print(f"[red]❌ Error: {results['error']}[/red]")
+            return
+        
+        success_count = 0
+        for channel, success in results.items():
+            status = "✅ PASS" if success else "❌ FAIL"
+            console.print(f"  {channel}: {status}")
+            if success:
+                success_count += 1
+        
+        console.print(f"\n[bold]Summary:[/bold]")
+        console.print(f"  Total Channels: {len(results)}")
+        console.print(f"  Successful: {success_count}")
+        console.print(f"  Failed: {len(results) - success_count}")
+        
+        if success_count == len(results):
+            console.print("[green]✅ All alert channels working![/green]")
+            console.print("[green]Discord webhook is ready for Zone Fade alerts![/green]")
+        else:
+            console.print("[yellow]⚠️ Some alert channels failed. Check configuration.[/yellow]")
+            
+    except Exception as e:
+        console.print(f"[red]❌ Error testing alert system: {e}[/red]")
+        console.print_exception()
 
 
 async def run_replay_mode(detector: ZoneFadeDetector, start_date: str, end_date: str, provider: str) -> None:

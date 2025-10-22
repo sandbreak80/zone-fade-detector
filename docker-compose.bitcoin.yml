@@ -1,0 +1,58 @@
+services:
+  bitcoin-zone-fade-detector:
+    build: .
+    container_name: bitcoin-zone-fade-detector
+    restart: unless-stopped
+    environment:
+      # Discord webhook for alerts
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      
+      # CoinGecko API (optional - free tier available)
+      - COINGECKO_API_KEY=${COINGECKO_API_KEY:-}
+      
+      # Logging
+      - LOG_LEVEL=INFO
+      
+    volumes:
+      # Mount logs directory
+      - ./logs:/app/logs
+      
+      # Mount cache directory
+      - ./cache:/app/cache
+      
+      # Mount Bitcoin config
+      - ./config/bitcoin_config.yaml:/app/config/bitcoin_config.yaml:ro
+      
+    entrypoint: ["python", "run_bitcoin_detector.py"]
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('https://api.coingecko.com/api/v3/ping')"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  # Test service for Bitcoin detector
+  bitcoin-test:
+    build: .
+    container_name: bitcoin-test
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - COINGECKO_API_KEY=${COINGECKO_API_KEY:-}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs:/app/logs
+      - ./cache:/app/cache
+      - ./config/bitcoin_config.yaml:/app/config/bitcoin_config.yaml:ro
+    entrypoint: ["python", "test_bitcoin_simple.py"]
+    profiles:
+      - test

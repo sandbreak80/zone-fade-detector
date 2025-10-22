@@ -1,0 +1,129 @@
+# Bitcoin Zone Fade Detector - 24/7 Cryptocurrency Configuration
+# This file contains settings specifically optimized for Bitcoin and crypto trading
+
+# =============================================================================
+# CRYPTOCURRENCY CONFIGURATION
+# =============================================================================
+coins:
+  - bitcoin      # Bitcoin (BTC) - Primary focus
+  - ethereum     # Ethereum (ETH) - Secondary
+  # - binancecoin  # Binance Coin (BNB) - Optional
+
+# =============================================================================
+# DATA POLLING CONFIGURATION (24/7 Trading)
+# =============================================================================
+polling:
+  interval_seconds: 60    # Check every minute (crypto moves fast)
+  max_retries: 3          # Maximum retry attempts for failed requests
+  timeout_seconds: 15     # Request timeout in seconds
+  batch_size: 100         # Number of bars to fetch per request
+
+# =============================================================================
+# DATA SOURCE CONFIGURATION
+# =============================================================================
+data:
+  timeout: 30
+  rate_limit_delay: 1.0   # Delay between API requests (respects rate limits)
+  cache_ttl: 300          # 5 minutes cache for crypto (more frequent updates)
+
+# =============================================================================
+# TECHNICAL INDICATORS CONFIGURATION (Crypto-Optimized)
+# =============================================================================
+indicators:
+  vwap:
+    enabled: true
+    standard_deviations: [1, 2]  # VWAP bands to calculate
+    lookback_hours: 12           # 12 hours for crypto (longer than stocks)
+  
+  opening_range:
+    enabled: false               # Not applicable for 24/7 crypto
+  
+  swing_structure:
+    enabled: true
+    lookback_bars: 50            # More bars for crypto volatility
+    min_swing_size: 0.5          # 0.5% minimum move for crypto (higher than stocks)
+  
+  volume_analysis:
+    enabled: true
+    expansion_threshold: 2.0     # Higher threshold for crypto volume spikes
+    contraction_threshold: 0.5   # Lower threshold for crypto volume drops
+
+# =============================================================================
+# ZONE DETECTION CONFIGURATION (Crypto-Optimized)
+# =============================================================================
+zones:
+  prior_day:
+    enabled: true
+    high_weight: 1.0
+    low_weight: 1.0
+  
+  weekly:
+    enabled: true
+    high_weight: 1.5             # Higher weight for weekly levels in crypto
+    low_weight: 1.5
+  
+  monthly:
+    enabled: true
+    high_weight: 2.0             # Monthly levels very important in crypto
+    low_weight: 2.0
+
+# =============================================================================
+# STRATEGY CONFIGURATION (Crypto-Optimized)
+# =============================================================================
+strategy:
+  min_qrs_score: 6               # Lower threshold for crypto (more volatile)
+  volume_threshold: 1.5          # Volume spike threshold
+  rejection_threshold: 0.4       # Rejection candle threshold (40% of range)
+  zone_proximity: 0.8            # Zone proximity threshold (0.8% for crypto)
+  choch_required: true           # Change of Character confirmation required
+  structure_flip_weight: 1.5     # Higher weight for structure flips in crypto
+
+# =============================================================================
+# ALERT CONFIGURATION
+# =============================================================================
+alerts:
+  console:
+    enabled: true
+    level: "INFO"
+  
+  file:
+    enabled: true
+    log_file: "logs/bitcoin_alerts.log"  # Relative path for better permissions
+    max_file_size: 10485760      # 10MB
+    backup_count: 5
+  
+  webhook:
+    enabled: true
+    url: ${DISCORD_WEBHOOK_URL}
+    timeout: 10
+    retry_attempts: 3
+  
+  email:
+    enabled: false               # Disabled by default for crypto
+
+# =============================================================================
+# PERFORMANCE CONFIGURATION
+# =============================================================================
+performance:
+  memory_limit_mb: 512           # Slightly higher for crypto data
+  max_concurrent_requests: 5     # Limit concurrent API requests
+  cache_size_mb: 100             # Cache size for crypto data
+
+# =============================================================================
+# CACHE CONFIGURATION
+# =============================================================================
+cache:
+  dir: "cache/bitcoin"
+  ttl: 300                       # 5 minutes for crypto
+  max_size: 1000                 # Maximum cached items
+
+# =============================================================================
+# LOGGING CONFIGURATION
+# =============================================================================
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/bitcoin_detector.log"  # Relative path for better permissions
+  max_size: 10485760             # 10MB
+  backup_count: 5
+  console: true
