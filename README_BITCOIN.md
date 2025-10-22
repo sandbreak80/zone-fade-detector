@@ -76,14 +76,26 @@ docker-compose -f docker-compose.bitcoin.yml up bitcoin-zone-fade-detector
 ### 5. Run Backtesting
 ```bash
 # Run Bitcoin backtest
-python backtest_bitcoin.py
+python backtesting/backtest_bitcoin.py
 
 # Run with custom config
-python backtest_bitcoin.py --config config/bitcoin_backtest.yaml
+python backtesting/backtest_bitcoin.py --config backtesting/config/bitcoin_backtest.yaml
+
+# Run example backtests
+python backtesting/example_backtest.py
+
+# Analyze results
+python backtesting/analyze_results.py
 
 # Run with Docker
 docker-compose -f docker-compose.bitcoin.yml run --rm bitcoin-backtest
 ```
+
+### 6. Backtesting Documentation
+For comprehensive backtesting documentation, see:
+- `backtesting/README.md` - Complete backtesting guide
+- `backtesting/example_backtest.py` - Example usage
+- `backtesting/analyze_results.py` - Results analysis
 
 ## 📊 Configuration
 

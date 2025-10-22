@@ -56,3 +56,20 @@ services:
     entrypoint: ["python", "test_bitcoin_simple.py"]
     profiles:
       - test
+
+  # Backtesting service
+  bitcoin-backtest:
+    build: .
+    container_name: bitcoin-backtest
+    environment:
+      - COINGECKO_API_KEY=${COINGECKO_API_KEY:-}
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./backtesting/results:/app/backtesting/results
+      - ./backtesting/logs:/app/backtesting/logs
+      - ./cache:/app/cache
+      - ./backtesting/config/bitcoin_backtest.yaml:/app/backtesting/config/bitcoin_backtest.yaml:ro
+    working_dir: /app/backtesting
+    entrypoint: ["python", "backtest_bitcoin.py"]
+    profiles:
+      - backtest
