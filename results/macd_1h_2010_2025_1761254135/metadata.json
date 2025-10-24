@@ -1,0 +1,49 @@
+{
+  "run_id": "macd_1h_2010_2025_1761254135",
+  "timestamp": "2025-10-23T19:15:33.364300",
+  "git_commit": "5276a4d5c836fdf20cd1c7fcbd45b37bd4506bb9",
+  "strategy": "MACD Crossover Strategy",
+  "date_range": {
+    "start": "2010-01-01T09:30:00",
+    "end": "2025-01-01T16:00:00"
+  },
+  "timeframe": "1H",
+  "instruments": [
+    "QQQ",
+    "SPY",
+    "LLY",
+    "AVGO",
+    "AAPL",
+    "CRM",
+    "ORCL"
+  ],
+  "selected_fortune_100": [
+    "LLY",
+    "AVGO",
+    "AAPL",
+    "CRM",
+    "ORCL"
+  ],
+  "configuration": {
+    "initial_capital": 10000,
+    "max_position_size": 0.2,
+    "commission": 0.001,
+    "slippage": 0.0005
+  },
+  "random_seeds": {
+    "permutation": 4242,
+    "ticker_selection": 12345
+  },
+  "permutation_counts": {
+    "imcpt": 1000,
+    "wfpt": 200
+  },
+  "train_window_size": 2000,
+  "retrain_frequency": 100,
+  "look_ahead_prevention": "1-bar shift in returns calculation",
+  "transaction_costs": "Commission: 0.100%, Slippage: 0.050%",
+  "results_summary": {
+    "total_instruments": 7,
+    "validation_passed": 0
+  }
+}
