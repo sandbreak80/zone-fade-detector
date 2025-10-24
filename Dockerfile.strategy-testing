@@ -29,6 +29,15 @@ COPY load_real_market_data.py ./
 COPY run_real_data_validation.py ./
 COPY run_simple_real_validation.py ./
 COPY generate_real_data_report.py ./
+COPY parallel_strategy_tester.py ./
+COPY master_strategy_summary.py ./
+COPY run_all_strategies_parallel.py ./
+COPY simple_master_summary.py ./
+COPY ultra_simple_summary.py ./
+COPY load_10m_market_data.py ./
+COPY parallel_strategy_tester_10m.py ./
+COPY swing_trading_strategies.py ./
+COPY run_swing_backtest.py ./
 COPY docs/ ./docs/
 
 # Create directories

@@ -1,6 +1,24 @@
 # Zone Fade Detector
 
-A sophisticated trading system for detecting Zone Fade setups using higher-timeframe zones, rejection candles, and volume analysis. **Currently optimized for backtesting and validation - not ready for live trading.**
+A sophisticated trading system for detecting Zone Fade setups using higher-timeframe zones, rejection candles, and volume analysis. **Now includes comprehensive swing trading framework with 5 multi-day strategies for FREE 15-minute delayed data trading.**
+
+## 🚀 **NEW: Swing Trading Framework**
+
+**Perfect for retail traders with delayed data!** We've built a complete swing trading framework with:
+
+- **5 Multi-Day Strategies** - Oversold Bounce, Breakout Continuation, Volatility Expansion, Sector Rotation, Earnings Momentum
+- **FREE Data Source** - Uses yfinance (no subscription costs!)
+- **15-Minute Delayed Data** - Perfect for swing trading (2-7 day holds)
+- **Real Backtesting Results** - 34 trades across 9 tests with realistic performance
+- **Risk Management** - Proper position sizing and stop losses
+
+**Quick Start Swing Trading:**
+```bash
+# Run swing trading backtest
+docker compose -f docker-compose.strategy-testing.yml run --rm strategy-testing python3 run_swing_backtest.py
+```
+
+**See [Swing Trading Summary](SWING_TRADING_SUMMARY.md) for complete details!**
 
 ## 🎯 Overview
 
@@ -301,3 +319,7 @@ For questions or issues:
 ### Development
 - [Contributing Guidelines](docs/CONTRIBUTING.md)
 - [Changelog](docs/CHANGELOG.md)
+
+### Swing Trading Framework
+- [Swing Trading Summary](SWING_TRADING_SUMMARY.md) - Complete swing trading framework with 5 strategies
+- [Philosophical Reflections](PHILOSOPHICAL_REFLECTIONS.md) - Deep thoughts on trading vs business building

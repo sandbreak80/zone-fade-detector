@@ -12,6 +12,10 @@ services:
       - RANDOM_SEED=42
       - PERMUTATION_SEED=123
       - TICKER_SELECTION_SEED=456
+      - ALPACA_API_KEY=${ALPACA_API_KEY}
+      - ALPACA_SECRET_KEY=${ALPACA_SECRET_KEY}
+      - ALPACA_BASE_URL=${ALPACA_BASE_URL}
+      - POLYGON_API_KEY=${POLYGON_API_KEY}
     volumes:
       - ./results:/app/results
       - ./data:/app/data
@@ -28,6 +32,10 @@ services:
     environment:
       - PYTHONPATH=/app/src
       - PYTHONUNBUFFERED=1
+      - ALPACA_API_KEY=${ALPACA_API_KEY}
+      - ALPACA_SECRET_KEY=${ALPACA_SECRET_KEY}
+      - ALPACA_BASE_URL=${ALPACA_BASE_URL}
+      - POLYGON_API_KEY=${POLYGON_API_KEY}
     volumes:
       - .:/app
       - ./results:/app/results
@@ -48,6 +56,10 @@ services:
       - RANDOM_SEED=42
       - PERMUTATION_SEED=123
       - TICKER_SELECTION_SEED=456
+      - ALPACA_API_KEY=${ALPACA_API_KEY}
+      - ALPACA_SECRET_KEY=${ALPACA_SECRET_KEY}
+      - ALPACA_BASE_URL=${ALPACA_BASE_URL}
+      - POLYGON_API_KEY=${POLYGON_API_KEY}
     volumes:
       - ./results:/app/results
       - ./data:/app/data

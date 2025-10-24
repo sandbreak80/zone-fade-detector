@@ -1,0 +1,758 @@
+{
+  "metadata": {
+    "created_on": "2025-10-24T03:56:18.686291",
+    "total_strategies": 0,
+    "total_tests": 35,
+    "framework_version": "2.0",
+    "description": "Enhanced strategy testing database with 10-minute data",
+    "last_updated": "2025-10-24T03:56:19.529487"
+  },
+  "strategies": {
+    "Bollinger Bands (period=20, std=2)_1h": [
+      {
+        "test_id": "Bollinger Bands (period=20, std=2)_LLY_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.730072",
+        "strategy_name": "Bollinger Bands (period=20, std=2)",
+        "strategy_type": "Breakout",
+        "instrument": "LLY",
+        "timeframe": "1h",
+        "total_return": -0.9976900507631185,
+        "sharpe_ratio": -1.842860923699836,
+        "max_drawdown": -0.9976957116641556,
+        "win_rate": 0.24555646704949413,
+        "profit_factor": 0.4120692167686077,
+        "total_trades": "3657",
+        "final_value": 23.099492368815532,
+        "validation_passed": "False",
+        "data_points": 23456,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Bollinger Bands (period=20, std=2)_QQQ_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.728118",
+        "strategy_name": "Bollinger Bands (period=20, std=2)",
+        "strategy_type": "Breakout",
+        "instrument": "QQQ",
+        "timeframe": "1h",
+        "total_return": -0.9933216816815686,
+        "sharpe_ratio": -4.631308679052505,
+        "max_drawdown": -0.9934311365224437,
+        "win_rate": 0.2588002873563218,
+        "profit_factor": 0.3837039034249092,
+        "total_trades": "5568",
+        "final_value": 66.78318318431361,
+        "validation_passed": "False",
+        "data_points": 35320,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Bollinger Bands (period=20, std=2)_SPY_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.729032",
+        "strategy_name": "Bollinger Bands (period=20, std=2)",
+        "strategy_type": "Breakout",
+        "instrument": "SPY",
+        "timeframe": "1h",
+        "total_return": -0.9954723509166143,
+        "sharpe_ratio": -5.399063433375517,
+        "max_drawdown": -0.9955011978230162,
+        "win_rate": 0.228519527702089,
+        "profit_factor": 0.28299601022358756,
+        "total_trades": "5505",
+        "final_value": 45.276490833857004,
+        "validation_passed": "False",
+        "data_points": 35517,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Bollinger Bands (period=20, std=2)_AVGO_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.977639",
+        "strategy_name": "Bollinger Bands (period=20, std=2)",
+        "strategy_type": "Breakout",
+        "instrument": "AVGO",
+        "timeframe": "1h",
+        "total_return": -0.9907312420125571,
+        "sharpe_ratio": -2.1541034920509765,
+        "max_drawdown": -0.9915996677798534,
+        "win_rate": 0.27571606475716065,
+        "profit_factor": 0.5344122250561918,
+        "total_trades": "4015",
+        "final_value": 92.68757987442868,
+        "validation_passed": "False",
+        "data_points": 25313,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Bollinger Bands (period=20, std=2)_CRM_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.984123",
+        "strategy_name": "Bollinger Bands (period=20, std=2)",
+        "strategy_type": "Breakout",
+        "instrument": "CRM",
+        "timeframe": "1h",
+        "total_return": -0.994946502155596,
+        "sharpe_ratio": -2.1772810864744185,
+        "max_drawdown": -0.9952143496123627,
+        "win_rate": 0.2573917029566812,
+        "profit_factor": 0.5012221110353842,
+        "total_trades": "4363",
+        "final_value": 50.53497844403979,
+        "validation_passed": "False",
+        "data_points": 28475,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Bollinger Bands (period=20, std=2)_ORCL_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.985379",
+        "strategy_name": "Bollinger Bands (period=20, std=2)",
+        "strategy_type": "Breakout",
+        "instrument": "ORCL",
+        "timeframe": "1h",
+        "total_return": -0.9956826807001914,
+        "sharpe_ratio": -2.721004340898311,
+        "max_drawdown": -0.995698837016286,
+        "win_rate": 0.2428430404738401,
+        "profit_factor": 0.3882865715136199,
+        "total_trades": "4052",
+        "final_value": 43.173192998085845,
+        "validation_passed": "False",
+        "data_points": 26526,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Bollinger Bands (period=20, std=2)_AAPL_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.981401",
+        "strategy_name": "Bollinger Bands (period=20, std=2)",
+        "strategy_type": "Breakout",
+        "instrument": "AAPL",
+        "timeframe": "1h",
+        "total_return": -0.9951068954490925,
+        "sharpe_ratio": -3.264111543723105,
+        "max_drawdown": -0.9951479421348829,
+        "win_rate": 0.2692787177203918,
+        "profit_factor": 0.4710542244352497,
+        "total_trades": "5615",
+        "final_value": 48.93104550907477,
+        "validation_passed": "False",
+        "data_points": 35246,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      }
+    ],
+    "RSI Mean Reversion (period=14, 30/70)_1h": [
+      {
+        "test_id": "RSI Mean Reversion (period=14, 30/70)_LLY_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.726291",
+        "strategy_name": "RSI Mean Reversion (period=14, 30/70)",
+        "strategy_type": "Mean Reversion",
+        "instrument": "LLY",
+        "timeframe": "1h",
+        "total_return": -0.9094944605539486,
+        "sharpe_ratio": -1.4959291789529765,
+        "max_drawdown": -0.9321649533348195,
+        "win_rate": 0.3777837044939325,
+        "profit_factor": 0.8415226942070348,
+        "total_trades": "7499",
+        "final_value": 905.055394460515,
+        "validation_passed": "False",
+        "data_points": 23456,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "RSI Mean Reversion (period=14, 30/70)_ORCL_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.727303",
+        "strategy_name": "RSI Mean Reversion (period=14, 30/70)",
+        "strategy_type": "Mean Reversion",
+        "instrument": "ORCL",
+        "timeframe": "1h",
+        "total_return": -0.9855858314041417,
+        "sharpe_ratio": -1.7216824570988196,
+        "max_drawdown": -0.9857645044572951,
+        "win_rate": 0.3642705131236699,
+        "profit_factor": 0.730288500824652,
+        "total_trades": "8458",
+        "final_value": 144.1416859585832,
+        "validation_passed": "False",
+        "data_points": 26526,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "RSI Mean Reversion (period=14, 30/70)_QQQ_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.725594",
+        "strategy_name": "RSI Mean Reversion (period=14, 30/70)",
+        "strategy_type": "Mean Reversion",
+        "instrument": "QQQ",
+        "timeframe": "1h",
+        "total_return": -0.9993839994506374,
+        "sharpe_ratio": -2.5656004043202487,
+        "max_drawdown": -0.9994120037644945,
+        "win_rate": 0.35967976710334787,
+        "profit_factor": 0.5842637684359803,
+        "total_trades": "13740",
+        "final_value": 6.160005493626005,
+        "validation_passed": "False",
+        "data_points": 35320,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "RSI Mean Reversion (period=14, 30/70)_AAPL_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.726728",
+        "strategy_name": "RSI Mean Reversion (period=14, 30/70)",
+        "strategy_type": "Mean Reversion",
+        "instrument": "AAPL",
+        "timeframe": "1h",
+        "total_return": -0.9995025790862134,
+        "sharpe_ratio": -1.8913587682747726,
+        "max_drawdown": -0.9995088743245681,
+        "win_rate": 0.36462964358375405,
+        "profit_factor": 0.6528015773897942,
+        "total_trades": "13271",
+        "final_value": 4.974209137865589,
+        "validation_passed": "False",
+        "data_points": 35246,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "RSI Mean Reversion (period=14, 30/70)_SPY_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.725949",
+        "strategy_name": "RSI Mean Reversion (period=14, 30/70)",
+        "strategy_type": "Mean Reversion",
+        "instrument": "SPY",
+        "timeframe": "1h",
+        "total_return": -0.9992709260521015,
+        "sharpe_ratio": -3.122091248044742,
+        "max_drawdown": -0.9992714492593343,
+        "win_rate": 0.351288056206089,
+        "profit_factor": 0.5146485109101345,
+        "total_trades": "13237",
+        "final_value": 7.290739478984755,
+        "validation_passed": "False",
+        "data_points": 35517,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "RSI Mean Reversion (period=14, 30/70)_CRM_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.726897",
+        "strategy_name": "RSI Mean Reversion (period=14, 30/70)",
+        "strategy_type": "Mean Reversion",
+        "instrument": "CRM",
+        "timeframe": "1h",
+        "total_return": -0.9881310464467538,
+        "sharpe_ratio": -1.4441865366324147,
+        "max_drawdown": -0.9897129493158042,
+        "win_rate": 0.3797008103054228,
+        "profit_factor": 0.787224321554808,
+        "total_trades": "9626",
+        "final_value": 118.68953553246224,
+        "validation_passed": "False",
+        "data_points": 28475,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "RSI Mean Reversion (period=14, 30/70)_AVGO_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.726518",
+        "strategy_name": "RSI Mean Reversion (period=14, 30/70)",
+        "strategy_type": "Mean Reversion",
+        "instrument": "AVGO",
+        "timeframe": "1h",
+        "total_return": -0.9946567031761031,
+        "sharpe_ratio": -1.3082620447912148,
+        "max_drawdown": -0.9950181865362064,
+        "win_rate": 0.3770617149098853,
+        "profit_factor": 0.7641408394871114,
+        "total_trades": "9155",
+        "final_value": 53.43296823896901,
+        "validation_passed": "False",
+        "data_points": 25313,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      }
+    ],
+    "EMA Crossover (12/26)_1h": [
+      {
+        "test_id": "EMA Crossover (12/26)_LLY_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.987928",
+        "strategy_name": "EMA Crossover (12/26)",
+        "strategy_type": "Trend Following",
+        "instrument": "LLY",
+        "timeframe": "1h",
+        "total_return": -0.9895165411531087,
+        "sharpe_ratio": -0.8457737446695639,
+        "max_drawdown": -0.9902666330078298,
+        "win_rate": 0.4868198414818773,
+        "profit_factor": 0.9076438046266894,
+        "total_trades": "22458",
+        "final_value": 104.83458846891264,
+        "validation_passed": "False",
+        "data_points": 23456,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "EMA Crossover (12/26)_AAPL_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.989605",
+        "strategy_name": "EMA Crossover (12/26)",
+        "strategy_type": "Trend Following",
+        "instrument": "AAPL",
+        "timeframe": "1h",
+        "total_return": -0.9878829739630417,
+        "sharpe_ratio": -1.110752626904679,
+        "max_drawdown": -0.9885335343564284,
+        "win_rate": 0.4946319473278368,
+        "profit_factor": 0.9195568240340463,
+        "total_trades": "33718",
+        "final_value": 121.17026036958322,
+        "validation_passed": "False",
+        "data_points": 35246,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "EMA Crossover (12/26)_AVGO_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.988787",
+        "strategy_name": "EMA Crossover (12/26)",
+        "strategy_type": "Trend Following",
+        "instrument": "AVGO",
+        "timeframe": "1h",
+        "total_return": -0.9176621219442025,
+        "sharpe_ratio": -0.727476014094197,
+        "max_drawdown": -0.9688071987104016,
+        "win_rate": 0.4900072752171866,
+        "profit_factor": 0.9659730066424101,
+        "total_trades": "23367",
+        "final_value": 823.3787805579755,
+        "validation_passed": "False",
+        "data_points": 25313,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "EMA Crossover (12/26)_QQQ_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.985793",
+        "strategy_name": "EMA Crossover (12/26)",
+        "strategy_type": "Trend Following",
+        "instrument": "QQQ",
+        "timeframe": "1h",
+        "total_return": -0.9818408357256683,
+        "sharpe_ratio": -1.4592972825102417,
+        "max_drawdown": -0.9828738432817794,
+        "win_rate": 0.49591390423572745,
+        "profit_factor": 0.9027990956330779,
+        "total_trades": "34752",
+        "final_value": 181.5916427433178,
+        "validation_passed": "False",
+        "data_points": 35320,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "EMA Crossover (12/26)_CRM_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.991537",
+        "strategy_name": "EMA Crossover (12/26)",
+        "strategy_type": "Trend Following",
+        "instrument": "CRM",
+        "timeframe": "1h",
+        "total_return": -0.976510861858354,
+        "sharpe_ratio": -0.7925968989201816,
+        "max_drawdown": -0.9803094566276627,
+        "win_rate": 0.4891751264418004,
+        "profit_factor": 0.9451409343257934,
+        "total_trades": "27483",
+        "final_value": 234.89138141646032,
+        "validation_passed": "False",
+        "data_points": 28475,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "EMA Crossover (12/26)_SPY_1h_1761278178",
+        "test_timestamp": "2025-10-24T03:56:18.986484",
+        "strategy_name": "EMA Crossover (12/26)",
+        "strategy_type": "Trend Following",
+        "instrument": "SPY",
+        "timeframe": "1h",
+        "total_return": -0.988883913001155,
+        "sharpe_ratio": -1.796941291277174,
+        "max_drawdown": -0.9892848985631228,
+        "win_rate": 0.486908747531977,
+        "profit_factor": 0.8604328248656772,
+        "total_trades": "34947",
+        "final_value": 111.16086998844978,
+        "validation_passed": "False",
+        "data_points": 35517,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "EMA Crossover (12/26)_ORCL_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.186442",
+        "strategy_name": "EMA Crossover (12/26)",
+        "strategy_type": "Trend Following",
+        "instrument": "ORCL",
+        "timeframe": "1h",
+        "total_return": -0.9815052086328666,
+        "sharpe_ratio": -0.9625810580686484,
+        "max_drawdown": -0.9838219786748877,
+        "win_rate": 0.4935169202360403,
+        "profit_factor": 0.9182533825546901,
+        "total_trades": "24911",
+        "final_value": 184.94791367133396,
+        "validation_passed": "False",
+        "data_points": 26526,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      }
+    ],
+    "VWAP Mean Reversion (threshold=2.0%)_1h": [
+      {
+        "test_id": "VWAP Mean Reversion (threshold=2.0%)_AVGO_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.203242",
+        "strategy_name": "VWAP Mean Reversion (threshold=2.0%)",
+        "strategy_type": "Volume-Based",
+        "instrument": "AVGO",
+        "timeframe": "1h",
+        "total_return": -0.9725887729209833,
+        "sharpe_ratio": -0.7578471676130824,
+        "max_drawdown": -0.9748307041871571,
+        "win_rate": 0.4771952535059331,
+        "profit_factor": 0.9450941760864605,
+        "total_trades": "23175",
+        "final_value": 274.1122707901665,
+        "validation_passed": "False",
+        "data_points": 25313,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "VWAP Mean Reversion (threshold=2.0%)_CRM_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.205625",
+        "strategy_name": "VWAP Mean Reversion (threshold=2.0%)",
+        "strategy_type": "Volume-Based",
+        "instrument": "CRM",
+        "timeframe": "1h",
+        "total_return": -0.8325613591248655,
+        "sharpe_ratio": -0.7359494394237149,
+        "max_drawdown": -0.8659746908666839,
+        "win_rate": 0.4823943661971831,
+        "profit_factor": 0.9776096033326114,
+        "total_trades": "26696",
+        "final_value": 1674.3864087513452,
+        "validation_passed": "False",
+        "data_points": 28475,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "VWAP Mean Reversion (threshold=2.0%)_LLY_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.202440",
+        "strategy_name": "VWAP Mean Reversion (threshold=2.0%)",
+        "strategy_type": "Volume-Based",
+        "instrument": "LLY",
+        "timeframe": "1h",
+        "total_return": -0.9440021486349214,
+        "sharpe_ratio": -0.8696806324751818,
+        "max_drawdown": -0.9632461023154367,
+        "win_rate": 0.48994939882085325,
+        "profit_factor": 0.9403937715056601,
+        "total_trades": "21541",
+        "final_value": 559.9785136507867,
+        "validation_passed": "False",
+        "data_points": 23456,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "VWAP Mean Reversion (threshold=2.0%)_QQQ_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.192396",
+        "strategy_name": "VWAP Mean Reversion (threshold=2.0%)",
+        "strategy_type": "Volume-Based",
+        "instrument": "QQQ",
+        "timeframe": "1h",
+        "total_return": -0.8672108396316057,
+        "sharpe_ratio": -1.3236102058878412,
+        "max_drawdown": -0.8781221109774674,
+        "win_rate": 0.4711965412479551,
+        "profit_factor": 0.9503378521276098,
+        "total_trades": "34232",
+        "final_value": 1327.8916036839425,
+        "validation_passed": "False",
+        "data_points": 35320,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "VWAP Mean Reversion (threshold=2.0%)_SPY_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.199664",
+        "strategy_name": "VWAP Mean Reversion (threshold=2.0%)",
+        "strategy_type": "Volume-Based",
+        "instrument": "SPY",
+        "timeframe": "1h",
+        "total_return": -0.6882604010367526,
+        "sharpe_ratio": -1.338804884027673,
+        "max_drawdown": -0.7038097338533401,
+        "win_rate": 0.4728475284288698,
+        "profit_factor": 0.9624195824136543,
+        "total_trades": "34472",
+        "final_value": 3117.3959896324745,
+        "validation_passed": "False",
+        "data_points": 35517,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "VWAP Mean Reversion (threshold=2.0%)_AAPL_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.204030",
+        "strategy_name": "VWAP Mean Reversion (threshold=2.0%)",
+        "strategy_type": "Volume-Based",
+        "instrument": "AAPL",
+        "timeframe": "1h",
+        "total_return": -0.9494554139910168,
+        "sharpe_ratio": -1.088998784544393,
+        "max_drawdown": -0.9558186230583298,
+        "win_rate": 0.4803514618997122,
+        "profit_factor": 0.9450642217475264,
+        "total_trades": "33005",
+        "final_value": 505.44586008983185,
+        "validation_passed": "False",
+        "data_points": 35246,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "VWAP Mean Reversion (threshold=2.0%)_ORCL_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.206640",
+        "strategy_name": "VWAP Mean Reversion (threshold=2.0%)",
+        "strategy_type": "Volume-Based",
+        "instrument": "ORCL",
+        "timeframe": "1h",
+        "total_return": -0.7128377017772906,
+        "sharpe_ratio": -0.8256058154749027,
+        "max_drawdown": -0.8559374078025973,
+        "win_rate": 0.49424424424424424,
+        "profit_factor": 0.9778959407252177,
+        "total_trades": "23976",
+        "final_value": 2871.6229822270943,
+        "validation_passed": "False",
+        "data_points": 26526,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      }
+    ],
+    "Multi-Signal (RSI+BB)_1h": [
+      {
+        "test_id": "Multi-Signal (RSI+BB)_SPY_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.208564",
+        "strategy_name": "Multi-Signal (RSI+BB)",
+        "strategy_type": "Combined",
+        "instrument": "SPY",
+        "timeframe": "1h",
+        "total_return": 0.0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0.0,
+        "win_rate": 0,
+        "profit_factor": Infinity,
+        "total_trades": "0",
+        "final_value": 10000.0,
+        "validation_passed": false,
+        "data_points": 35517,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Multi-Signal (RSI+BB)_QQQ_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.207179",
+        "strategy_name": "Multi-Signal (RSI+BB)",
+        "strategy_type": "Combined",
+        "instrument": "QQQ",
+        "timeframe": "1h",
+        "total_return": 0.0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0.0,
+        "win_rate": 0,
+        "profit_factor": Infinity,
+        "total_trades": "0",
+        "final_value": 10000.0,
+        "validation_passed": false,
+        "data_points": 35320,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Multi-Signal (RSI+BB)_LLY_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.402403",
+        "strategy_name": "Multi-Signal (RSI+BB)",
+        "strategy_type": "Combined",
+        "instrument": "LLY",
+        "timeframe": "1h",
+        "total_return": 0.0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0.0,
+        "win_rate": 0,
+        "profit_factor": Infinity,
+        "total_trades": "0",
+        "final_value": 10000.0,
+        "validation_passed": false,
+        "data_points": 23456,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Multi-Signal (RSI+BB)_CRM_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.414638",
+        "strategy_name": "Multi-Signal (RSI+BB)",
+        "strategy_type": "Combined",
+        "instrument": "CRM",
+        "timeframe": "1h",
+        "total_return": 0.0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0.0,
+        "win_rate": 0,
+        "profit_factor": Infinity,
+        "total_trades": "0",
+        "final_value": 10000.0,
+        "validation_passed": false,
+        "data_points": 28475,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Multi-Signal (RSI+BB)_AVGO_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.410712",
+        "strategy_name": "Multi-Signal (RSI+BB)",
+        "strategy_type": "Combined",
+        "instrument": "AVGO",
+        "timeframe": "1h",
+        "total_return": 0.0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0.0,
+        "win_rate": 0,
+        "profit_factor": Infinity,
+        "total_trades": "0",
+        "final_value": 10000.0,
+        "validation_passed": false,
+        "data_points": 25313,
+        "date_range": {
+          "start": "2016-01-04T13:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Multi-Signal (RSI+BB)_ORCL_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.416961",
+        "strategy_name": "Multi-Signal (RSI+BB)",
+        "strategy_type": "Combined",
+        "instrument": "ORCL",
+        "timeframe": "1h",
+        "total_return": 0.0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0.0,
+        "win_rate": 0,
+        "profit_factor": Infinity,
+        "total_trades": "0",
+        "final_value": 10000.0,
+        "validation_passed": false,
+        "data_points": 26526,
+        "date_range": {
+          "start": "2016-01-04T12:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      },
+      {
+        "test_id": "Multi-Signal (RSI+BB)_AAPL_1h_1761278179",
+        "test_timestamp": "2025-10-24T03:56:19.414474",
+        "strategy_name": "Multi-Signal (RSI+BB)",
+        "strategy_type": "Combined",
+        "instrument": "AAPL",
+        "timeframe": "1h",
+        "total_return": 0.0,
+        "sharpe_ratio": 0,
+        "max_drawdown": 0.0,
+        "win_rate": 0,
+        "profit_factor": Infinity,
+        "total_trades": "0",
+        "final_value": 10000.0,
+        "validation_passed": false,
+        "data_points": 35246,
+        "date_range": {
+          "start": "2016-01-01T00:00:00+00:00",
+          "end": "2025-01-01T00:00:00+00:00"
+        }
+      }
+    ]
+  },
+  "performance_summary": {}
+}
