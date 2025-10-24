@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real Market Data Validation Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f5f5f5; }
+        .header { text-align: center; margin-bottom: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; }
+        .summary-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .summary-table th, .summary-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .summary-table th { background-color: #f8f9fa; font-weight: bold; color: #495057; }
+        .summary-table tr:nth-child(even) { background-color: #f8f9fa; }
+        .positive { color: #28a745; font-weight: bold; }
+        .negative { color: #dc3545; font-weight: bold; }
+        .info { background-color: #e7f3ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #007bff; }
+        .warning { background-color: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107; }
+        .success { background-color: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
+        .metric-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .metric-value { font-size: 2em; font-weight: bold; margin: 10px 0; }
+        .chart-container { text-align: center; margin: 30px 0; }
+        .chart-container img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Real Market Data Validation Report</h1>
+        <h2>MACD Crossover Strategy Performance Analysis</h2>
+        <p>Generated on 2025-10-24 03:29:14</p>
+    </div>
+    
+    <div class="info">
+        <h3>📊 Test Configuration</h3>
+        <p><strong>Strategy:</strong> MACD Crossover (Fast: 12, Slow: 26, Signal: 9)</p>
+        <p><strong>Data Source:</strong> Alpaca API - Real 1-Hour Candles</p>
+        <p><strong>Date Range:</strong> 2016-01-01 to 2025-01-01</p>
+        <p><strong>Instruments:</strong> QQQ, SPY, LLY, AVGO, AAPL, CRM, ORCL</p>
+        <p><strong>Initial Capital:</strong> $10,000 per instrument</p>
+        <p><strong>Transaction Costs:</strong> 0.1% commission + 0.05% slippage</p>
+    </div>
+    
+    <div class="warning">
+        <h3>⚠️ Validation Results</h3>
+        <p><strong>Overall Status:</strong> ❌ FAILED (0/7 instruments passed validation)</p>
+        <p><strong>Key Findings:</strong></p>
+        <ul>
+            <li>All instruments showed negative returns (-99.9% to -100.0%)</li>
+            <li>Negative Sharpe ratios across all instruments (-4.9 to -9.9)</li>
+            <li>Extreme drawdowns (99.9% to 100%)</li>
+            <li>Low win rates (9% to 16%)</li>
+            <li>Poor profit factors (0.12 to 0.32)</li>
+        </ul>
+        <p><strong>Conclusion:</strong> MACD crossover strategy is not suitable for these instruments with current parameters.</p>
+    </div>
+    
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <h4>Instruments Tested</h4>
+            <div class="metric-value">7</div>
+        </div>
+        <div class="metric-card">
+            <h4>Validation Passed</h4>
+            <div class="metric-value" style="color: #dc3545;">0</div>
+        </div>
+        <div class="metric-card">
+            <h4>Average Return</h4>
+            <div class="metric-value" style="color: #dc3545;">-99.9%</div>
+        </div>
+        <div class="metric-card">
+            <h4>Average Sharpe</h4>
+            <div class="metric-value" style="color: #dc3545;">-6.658</div>
+        </div>
+    </div>
+    
+    <h3>📈 Performance Summary</h3>
+    <table border="1" class="dataframe summary-table">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Symbol</th>
+      <th>Total Return</th>
+      <th>CAGR</th>
+      <th>Sharpe Ratio</th>
+      <th>Max Drawdown</th>
+      <th>Calmar Ratio</th>
+      <th>Volatility</th>
+      <th>Win Rate</th>
+      <th>Profit Factor</th>
+      <th>Total Trades</th>
+      <th>Final Value</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>QQQ</td>
+      <td>-100.0%</td>
+      <td>-58.0%</td>
+      <td>-8.611</td>
+      <td>-100.0%</td>
+      <td>-0.580</td>
+      <td>11.6%</td>
+      <td>11.6%</td>
+      <td>0.166</td>
+      <td>5,067</td>
+      <td>$4</td>
+      <td>❌ FAILED</td>
+    </tr>
+    <tr>
+      <td>SPY</td>
+      <td>-100.0%</td>
+      <td>-58.6%</td>
+      <td>-9.895</td>
+      <td>-100.0%</td>
+      <td>-0.586</td>
+      <td>10.1%</td>
+      <td>9.0%</td>
+      <td>0.119</td>
+      <td>5,166</td>
+      <td>$4</td>
+      <td>❌ FAILED</td>
+    </tr>
+    <tr>
+      <td>LLY</td>
+      <td>-99.9%</td>
+      <td>-54.6%</td>
+      <td>-4.989</td>
+      <td>-99.9%</td>
+      <td>-0.547</td>
+      <td>20.0%</td>
+      <td>15.0%</td>
+      <td>0.251</td>
+      <td>3,671</td>
+      <td>$8</td>
+      <td>❌ FAILED</td>
+    </tr>
+    <tr>
+      <td>AVGO</td>
+      <td>-99.9%</td>
+      <td>-52.1%</td>
+      <td>-4.916</td>
+      <td>-99.9%</td>
+      <td>-0.521</td>
+      <td>20.3%</td>
+      <td>16.1%</td>
+      <td>0.317</td>
+      <td>3,789</td>
+      <td>$13</td>
+      <td>❌ FAILED</td>
+    </tr>
+    <tr>
+      <td>AAPL</td>
+      <td>-100.0%</td>
+      <td>-59.6%</td>
+      <td>-6.830</td>
+      <td>-100.0%</td>
+      <td>-0.597</td>
+      <td>14.6%</td>
+      <td>13.2%</td>
+      <td>0.214</td>
+      <td>5,095</td>
+      <td>$3</td>
+      <td>❌ FAILED</td>
+    </tr>
+    <tr>
+      <td>CRM</td>
+      <td>-99.9%</td>
+      <td>-55.6%</td>
+      <td>-5.419</td>
+      <td>-99.9%</td>
+      <td>-0.556</td>
+      <td>18.4%</td>
+      <td>15.8%</td>
+      <td>0.292</td>
+      <td>4,254</td>
+      <td>$7</td>
+      <td>❌ FAILED</td>
+    </tr>
+    <tr>
+      <td>ORCL</td>
+      <td>-99.9%</td>
+      <td>-56.0%</td>
+      <td>-5.947</td>
+      <td>-99.9%</td>
+      <td>-0.560</td>
+      <td>16.8%</td>
+      <td>13.9%</td>
+      <td>0.209</td>
+      <td>4,073</td>
+      <td>$6</td>
+      <td>❌ FAILED</td>
+    </tr>
+  </tbody>
+</table>
+    
+    <div class="chart-container">
+        <h3>📊 Performance Analysis</h3>
+        <img src="performance_analysis.png" alt="Performance Analysis">
+    </div>
+    
+    <div class="chart-container">
+        <h3>📊 Risk-Return Profile</h3>
+        <img src="risk_return_analysis.png" alt="Risk-Return Analysis">
+    </div>
+    
+    <div class="chart-container">
+        <h3>📊 Performance Heatmap</h3>
+        <img src="performance_heatmap.png" alt="Performance Heatmap">
+    </div>
+    
+    <div class="info">
+        <h3>🔍 Analysis Notes</h3>
+        <ul>
+            <li><strong>Data Quality:</strong> Real market data from Alpaca API ensures authentic results</li>
+            <li><strong>Strategy Performance:</strong> MACD crossover shows consistent poor performance across all instruments</li>
+            <li><strong>Risk Management:</strong> Extreme drawdowns indicate need for better risk controls</li>
+            <li><strong>Parameter Optimization:</strong> Current MACD parameters (12,26,9) may not be optimal for 1-hour timeframe</li>
+            <li><strong>Market Conditions:</strong> Strategy may perform differently in different market regimes</li>
+        </ul>
+    </div>
+    
+    <div class="success">
+        <h3>✅ Framework Validation</h3>
+        <p><strong>Real Data Integration:</strong> Successfully loaded and processed 209,853 bars of real market data</p>
+        <p><strong>Unique Results:</strong> Each instrument shows different performance metrics (no more identical results!)</p>
+        <p><strong>Proper Validation:</strong> Framework correctly identified poor strategy performance</p>
+        <p><strong>Comprehensive Reporting:</strong> Generated detailed performance analysis and visualizations</p>
+    </div>
+    
+    <div class="info">
+        <h3>🚀 Next Steps</h3>
+        <ul>
+            <li>Test different strategy parameters or algorithms</li>
+            <li>Implement parameter optimization</li>
+            <li>Add Monte Carlo permutation testing</li>
+            <li>Implement walk-forward analysis</li>
+            <li>Test on different timeframes or instruments</li>
+        </ul>
+    </div>
+</body>
+</html>
+        

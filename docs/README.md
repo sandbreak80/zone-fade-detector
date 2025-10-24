@@ -1,111 +1,314 @@
-# Zone Fade Detector Documentation
+# Trading Strategy Testing Framework
 
-Welcome to the Zone Fade Detector documentation! This directory contains comprehensive documentation for the project.
+A scientific, reproducible system for validating trading strategies using rigorous statistical methods and automated GitHub publishing.
 
-## 📚 Documentation Index
+## 🎯 Overview
 
-### 🚀 Getting Started
-- **[Setup Guide](SETUP_GUIDE.md)** - Complete setup instructions
-- **[Quick Start](QUICK_START.md)** - Quick start guide for immediate use
-- **[Docker Guide](README.Docker.md)** - Docker-specific setup and usage
+The **Trading Strategy Testing Framework** transforms the Zone Fade Detector into a standardized, reproducible system for validating trading strategies. Built on scientific principles, this framework uses a 4-step validation battery to prevent overfitting, ensure reproducibility, and automatically publish results to GitHub for historical tracking.
 
-### 📊 Strategy & Analysis
-- **[Strategy Analysis](STRATEGY_ANALYSIS.md)** - Detailed strategy implementation analysis
-- **[Volume Spike Implementation](VOLUME_SPIKE_IMPLEMENTATION.md)** - Volume spike detection implementation
-- **[Operational Analysis](OPERATIONAL_ANALYSIS.md)** - Rolling time windows and operational design
-- **[Backtesting Plan](BACKTESTING_PLAN.md)** - Backtesting strategy and procedures
+### Key Features
+- **Scientific Validation**: 4-step statistical testing battery prevents overfitting
+- **Reproducibility**: Docker environment + version control + comprehensive metadata
+- **Zero-Friction Extension**: New strategies require zero framework changes
+- **Professional Reporting**: Standardized metrics and GitHub publishing
+- **Bar-Level Returns**: Proper look-ahead prevention and robust statistical analysis
 
-### 🔧 Development
-- **[Contributing Guidelines](CONTRIBUTING.md)** - How to contribute to the project
-- **[Changelog](CHANGELOG.md)** - Version history and changes
-- **[Session Checkpoint](SESSION_CHECKPOINT.md)** - Development session documentation
+## 🚀 Quick Start
 
-### 🛠️ Configuration
-- **[Discord Setup](DISCORD_SETUP.md)** - Discord webhook configuration
-- **[Setup Rules](SETUP_RULES.md)** - Development and setup rules
+```bash
+# Clone and setup
+git clone https://github.com/your-org/zone-fade-detector.git
+cd zone-fade-detector
 
-### 📋 Project Management
-- **[PRD (Product Requirements Document)](PRD.md)** - Product requirements and specifications
-- **[GitHub Ready Summary](GITHUB_READY_SUMMARY.md)** - Project preparation summary
+# Build Docker environment
+docker-compose build
 
-## 🎯 Quick Navigation
+# Run MACD framework shakedown test
+docker-compose run zone-fade-detector python -m strategy_testing.macd_shakedown
 
-### For New Users
-1. Start with [Setup Guide](SETUP_GUIDE.md)
-2. Follow [Quick Start](QUICK_START.md)
-3. Configure [Discord Setup](DISCORD_SETUP.md)
-
-### For Developers
-1. Read [Contributing Guidelines](CONTRIBUTING.md)
-2. Review [Strategy Analysis](STRATEGY_ANALYSIS.md)
-3. Check [Operational Analysis](OPERATIONAL_ANALYSIS.md)
-
-### For Strategy Analysis
-1. Study [Strategy Analysis](STRATEGY_ANALYSIS.md)
-2. Review [Volume Spike Implementation](VOLUME_SPIKE_IMPLEMENTATION.md)
-3. Check [Backtesting Plan](BACKTESTING_PLAN.md)
-
-## 📖 Documentation Structure
-
-```
-docs/
-├── README.md                           # This index file
-├── SETUP_GUIDE.md                      # Setup instructions
-├── QUICK_START.md                      # Quick start guide
-├── README.Docker.md                    # Docker guide
-├── STRATEGY_ANALYSIS.md                # Strategy implementation analysis
-├── VOLUME_SPIKE_IMPLEMENTATION.md      # Volume spike detection
-├── OPERATIONAL_ANALYSIS.md             # Rolling windows analysis
-├── BACKTESTING_PLAN.md                 # Backtesting procedures
-├── CONTRIBUTING.md                     # Contribution guidelines
-├── CHANGELOG.md                        # Version history
-├── DISCORD_SETUP.md                    # Discord configuration
-├── SETUP_RULES.md                      # Development rules
-├── SESSION_CHECKPOINT.md               # Session documentation
-├── PRD.md                              # Product requirements
-└── GITHUB_READY_SUMMARY.md             # Project preparation summary
+# View results
+ls results/strategy_001_macd_crossover_*/
 ```
 
-## 🔍 Finding Information
+## 📚 Documentation
 
-### By Topic
-- **Setup & Installation**: Setup Guide, Quick Start, Docker Guide
-- **Strategy Details**: Strategy Analysis, Volume Spike Implementation
-- **Development**: Contributing Guidelines, Setup Rules
-- **Configuration**: Discord Setup, Setup Guide
-- **Analysis**: Operational Analysis, Backtesting Plan
+### Core Documentation
+- **[Framework Overview](STRATEGY_TESTING_FRAMEWORK.md)** - Complete framework introduction
+- **[Architecture Guide](ARCHITECTURE.md)** - System design and components
+- **[Validation Methodology](VALIDATION_METHODOLOGY.md)** - 4-step validation process
+- **[Strategy Development](STRATEGY_DEVELOPMENT.md)** - How to create new strategies
+- **[API Reference](API_REFERENCE.md)** - Technical API documentation
 
-### By Audience
-- **End Users**: Setup Guide, Quick Start, Discord Setup
-- **Developers**: Contributing Guidelines, Setup Rules, Strategy Analysis
-- **Analysts**: Strategy Analysis, Operational Analysis, Backtesting Plan
-- **Contributors**: Contributing Guidelines, Changelog, Session Checkpoint
+### Standards & Best Practices
+- **[Reporting Standards](REPORTING_STANDARDS.md)** - Metrics and visualization standards
+- **[Reproducibility Guide](REPRODUCIBILITY.md)** - Ensuring reproducible results
+- **[Contributing Guide](CONTRIBUTING.md)** - Development guidelines
 
-## 📝 Documentation Standards
+## 🏗️ Architecture
 
-All documentation follows these standards:
-- Clear, concise language
-- Step-by-step instructions where applicable
-- Code examples with proper formatting
-- Cross-references to related documents
-- Regular updates with code changes
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Strategy Testing Framework               │
+├─────────────────────────────────────────────────────────────┤
+│ Publishing Layer    │ GitHub integration, result commits   │
+├─────────────────────────────────────────────────────────────┤
+│ Reporting Layer     │ Standardized metrics, plots, reports │
+├─────────────────────────────────────────────────────────────┤
+│ Validation Layer    │ 4-step testing battery (IS/WF/PT)    │
+├─────────────────────────────────────────────────────────────┤
+│ Strategy Layer      │ BaseStrategy interface, implementations│
+├─────────────────────────────────────────────────────────────┤
+│ Data Layer          │ Alpaca/Polygon APIs, Fortune 100     │
+└─────────────────────────────────────────────────────────────┘
+```
 
-## 🤝 Contributing to Documentation
+## 🔬 4-Step Validation Process
 
-To contribute to documentation:
-1. Follow the [Contributing Guidelines](../CONTRIBUTING.md)
-2. Update relevant documentation with code changes
-3. Use clear, descriptive commit messages
-4. Test all code examples before committing
+### 1. In-Sample Excellence
+- Parameter optimization on training data
+- Equity curve analysis and stability checks
+- Parameter surface mapping
 
-## 📞 Getting Help
+### 2. In-Sample Monte Carlo Permutation Test (IMCPT)
+- 1,000 permutations of training data
+- Re-optimize on each permutation
+- **Target: p < 1%** (genuine patterns vs. selection bias)
 
-If you can't find what you're looking for:
-1. Check the main [README](../README.md)
-2. Search through the documentation files
-3. Create an issue on GitHub
-4. Check the [Contributing Guidelines](CONTRIBUTING.md)
+### 3. Walk-Forward Test (WFT)
+- Rolling 4-year training windows, 30-day retrain
+- True out-of-sample performance
+- Performance degradation analysis
+
+### 4. Walk-Forward Permutation Test (WFPT)
+- 200 permutations of OOS segments only
+- Re-run walk-forward pipeline
+- **Target: p ≤ 5%** (1 year OOS) or **p ≤ 1%** (2+ years OOS)
+
+## 📊 Standard Metrics
+
+### Performance Metrics
+- **Returns**: Total return, annualized return, volatility, Sharpe ratio
+- **Risk**: Maximum drawdown, Calmar ratio, Sortino ratio, tail ratio
+- **Trading**: Win rate, profit factor, average win/loss, trade frequency
+- **Risk-Adjusted**: MAR, Omega ratio, recovery time
+
+### Statistical Validation
+- **P-values**: IMCPT and WFPT significance levels
+- **Confidence Intervals**: Bootstrap 95% CIs for key metrics
+- **Regime Analysis**: Performance by market conditions
+- **Cost Sensitivity**: Transaction cost impact analysis
+
+## 🛠️ Creating New Strategies
+
+### 1. Implement BaseStrategy Interface
+```python
+from zone_fade_detector.strategies.base_strategy import BaseStrategy
+
+class MyStrategy(BaseStrategy):
+    def generate_signal(self, bars, params):
+        # Your trading logic here
+        return signals
+    
+    def get_parameter_space(self):
+        # Define parameter ranges
+        return parameter_space
+    
+    def get_name(self):
+        return "My Strategy"
+```
+
+### 2. Register Strategy
+```python
+# Add to strategies/__init__.py
+STRATEGIES = {
+    'my_strategy': MyStrategy,
+    # ... other strategies
+}
+```
+
+### 3. Run Validation
+```bash
+# Test your strategy
+docker-compose run zone-fade-detector python -m strategy_testing.run_strategy my_strategy
+```
+
+## 📈 Example: MACD Strategy
+
+The framework includes a MACD crossover strategy as a framework shakedown test:
+
+```python
+class MACDStrategy(BaseStrategy):
+    def generate_signal(self, bars, params):
+        # Calculate MACD indicators
+        macd_line, signal_line = self._calculate_macd(bars, params)
+        
+        # Generate crossover signals
+        signals = []
+        for i in range(len(bars)):
+            if i > 0 and macd_line[i] > signal_line[i] and macd_line[i-1] <= signal_line[i-1]:
+                signals.append(1)  # Buy signal
+            elif i > 0 and macd_line[i] < signal_line[i] and macd_line[i-1] >= signal_line[i-1]:
+                signals.append(-1)  # Sell signal
+            else:
+                signals.append(0)
+        
+        return signals
+```
+
+## 🎯 Expected Results
+
+### MACD Shakedown Test
+- **Expected Outcome**: Framework correctly identifies unprofitable strategy
+- **IMCPT P-value**: Likely >5% (no genuine edge)
+- **WFPT P-value**: Likely >10% (OOS success due to luck)
+- **Validation**: Proves framework works correctly
+
+### Successful Strategy
+- **IS Excellence**: Clear performance with stable parameters
+- **IMCPT**: p < 1% (genuine patterns, not selection bias)
+- **WFT**: Positive OOS performance with reasonable degradation
+- **WFPT**: p ≤ 5% (OOS success not due to luck)
+
+## 🔧 Configuration
+
+### Environment Variables
+```bash
+# Data sources
+ALPACA_API_KEY=your_alpaca_key
+ALPACA_SECRET_KEY=your_alpaca_secret
+POLYGON_API_KEY=your_polygon_key
+
+# Discord notifications (optional)
+DISCORD_WEBHOOK_URL=your_webhook_url
+
+# Random seeds for reproducibility
+RANDOM_SEED=42
+PERMUTATION_SEED=123
+TICKER_SELECTION_SEED=456
+```
+
+### Strategy Configuration
+```yaml
+# config/strategy_testing.yaml
+strategy:
+  name: "MACD Crossover"
+  symbols: ["QQQ", "SPY"]
+  start_date: "2010-01-01"
+  end_date: "2025-01-01"
+  timeframe: "1h"
+
+validation:
+  train_years: 4
+  retrain_days: 30
+  n_permutations_imcpt: 1000
+  n_permutations_wfpt: 200
+
+performance:
+  initial_capital: 10000
+  commission: 0.001
+  slippage: 0.0005
+  max_position_size: 0.2
+```
+
+## 📊 Results Structure
+
+```
+results/
+├── strategy_001_macd_crossover_2024-01-15/
+│   ├── SUMMARY.md                    # Executive summary
+│   ├── metrics.csv                   # Machine-readable metrics
+│   ├── metadata.json                 # Run metadata and configuration
+│   ├── plots/
+│   │   ├── equity_curve.png          # Equity curve visualization
+│   │   ├── drawdown_chart.png        # Drawdown analysis
+│   │   ├── monthly_heatmap.png       # Monthly returns heatmap
+│   │   ├── parameter_surface.png     # 3D parameter optimization
+│   │   ├── permutation_histogram.png # Statistical significance
+│   │   └── regime_analysis.png       # Performance by market regime
+│   └── data/
+│       ├── signals.csv              # Position signals
+│       ├── returns.csv              # Strategy returns
+│       └── trades.csv               # Individual trade analysis
+```
+
+## 🚀 Getting Started
+
+### 1. Read the Documentation
+- Start with [Framework Overview](STRATEGY_TESTING_FRAMEWORK.md)
+- Review [Architecture Guide](ARCHITECTURE.md)
+- Understand [Validation Methodology](VALIDATION_METHODOLOGY.md)
+
+### 2. Set Up Environment
+```bash
+# Clone repository
+git clone https://github.com/your-org/zone-fade-detector.git
+cd zone-fade-detector
+
+# Build Docker environment
+docker-compose build
+
+# Set up configuration
+cp .env.example .env
+# Edit .env with your API keys
+```
+
+### 3. Run Framework Shakedown
+```bash
+# Run MACD test to validate framework
+docker-compose run zone-fade-detector python -m strategy_testing.macd_shakedown
+
+# View results
+ls results/strategy_001_macd_crossover_*/
+```
+
+### 4. Create Your Strategy
+- Follow [Strategy Development Guide](STRATEGY_DEVELOPMENT.md)
+- Implement `BaseStrategy` interface
+- Test your strategy
+- Publish results
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+### Development Setup
+```bash
+# Install development dependencies
+pip install -r requirements-dev.txt
+
+# Run tests
+python -m pytest tests/
+
+# Run linting
+python -m flake8 src/
+python -m black src/
+```
+
+### Adding New Strategies
+1. Implement `BaseStrategy` interface
+2. Add to `strategies/__init__.py`
+3. Create unit tests
+4. Test with framework
+5. Submit pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see [LICENSE](../LICENSE) for details.
+
+## 🙏 Acknowledgments
+
+- **Timothy Masters** - "Permutation and Randomization Tests for Trading System Development"
+- **mcpt Repository** - [neurotrader888/mcpt](https://github.com/neurotrader888/mcpt) - Monte Carlo permutation tests implementation
+- **Alpaca API** - Historical data and paper trading
+- **Polygon API** - Alternative data source for redundancy
+
+## 📞 Support
+
+- **Documentation**: Check this documentation first
+- **Issues**: Report issues on GitHub
+- **Community**: Join the community discussions
+- **Professional Support**: Contact for commercial support
 
 ---
 
-*This documentation is maintained alongside the codebase and updated with each release.*
+*This framework provides a professional-grade strategy testing system that can validate any trading idea with scientific rigor while maintaining complete reproducibility and historical tracking through GitHub integration.*

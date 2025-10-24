@@ -1,0 +1,42 @@
+# Dockerfile for Trading Strategy Testing Framework
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first for better caching
+COPY requirements-strategy-testing.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements-strategy-testing.txt
+
+# Copy source code
+COPY src/ ./src/
+COPY test_*.py ./
+COPY generate_performance_reports.py ./
+COPY standalone_performance_reporter.py ./
+COPY simple_performance_summary.py ./
+COPY load_real_market_data.py ./
+COPY run_real_data_validation.py ./
+COPY run_simple_real_validation.py ./
+COPY generate_real_data_report.py ./
+COPY docs/ ./docs/
+
+# Create directories
+RUN mkdir -p results data logs
+
+# Set environment variables
+ENV PYTHONPATH=/app/src
+ENV PYTHONUNBUFFERED=1
+
+# Default command
+CMD ["python", "test_simple_framework.py"]

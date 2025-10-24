@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  strategy-testing:
+    build:
+      context: .
+      dockerfile: Dockerfile.strategy-testing
+    container_name: strategy-testing-framework
+    environment:
+      - PYTHONPATH=/app/src
+      - PYTHONUNBUFFERED=1
+      - RANDOM_SEED=42
+      - PERMUTATION_SEED=123
+      - TICKER_SELECTION_SEED=456
+    volumes:
+      - ./results:/app/results
+      - ./data:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "8888:8888"  # Jupyter notebook
+    command: ["python", "test_simple_framework.py"]
+    
+  strategy-testing-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.strategy-testing
+    container_name: strategy-testing-dev
+    environment:
+      - PYTHONPATH=/app/src
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - .:/app
+      - ./results:/app/results
+      - ./data:/app/data
+      - ./logs:/app/logs
+    ports:
+      - "8888:8888"
+    command: ["tail", "-f", "/dev/null"]  # Keep container running for development
+    
+  macd-shakedown:
+    build:
+      context: .
+      dockerfile: Dockerfile.strategy-testing
+    container_name: macd-shakedown-test
+    environment:
+      - PYTHONPATH=/app/src
+      - PYTHONUNBUFFERED=1
+      - RANDOM_SEED=42
+      - PERMUTATION_SEED=123
+      - TICKER_SELECTION_SEED=456
+    volumes:
+      - ./results:/app/results
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: ["python", "-c", "print('MACD Shakedown Test - Coming Soon!')"]
